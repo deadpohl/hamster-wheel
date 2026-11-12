@@ -1,4 +1,4 @@
-# Hamster wheel desk toy: all printable dimensions, in millimetres.
+﻿# Hamster wheel desk toy: all printable dimensions, in millimetres.
 # Author: DeadPohl  https://www.instagram.com/_deadpohl_
 #
 # Edit the values below, then run `python build_all.py` to regenerate ../stl.
@@ -28,11 +28,11 @@ USB_AXIS_ABOVE_PCB = 1.7  # height of the USB-C port axis above the PCB top
 
 # ------------------------------------------------------------------- tray
 TRAY_L = 110.0          # outer size along X
-TRAY_W = 70.0           # outer size along Y
+TRAY_W = 52.0           # outer size along Y (the ESP32 lies lengthwise along X)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
 WIRE_ROOM = 4.0         # free height between the ESP32 and the lid for wires
-BOARD_X = -34.0         # ESP32 position along X (negative = left)
+BOARD_Y = 0.0           # ESP32 position along Y (0 = centred). It sits at the left end, USB-C toward the left wall
 
 # -------------------------------------------------------------------- lid
 LID_T = 3.0             # lid plate thickness (also the depth of the seat in the tray)
@@ -49,7 +49,7 @@ WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the 
 FOOT_H = 6.0            # height of the foot below the ring
 FOOT_W = 50.0
 WHEEL_X = 20.0          # wheel position on the lid (X)
-WHEEL_Y = 4.0           # wheel front face position on the lid (Y, negative = toward viewer)
+WHEEL_Y = 3.0           # wheel front face position on the lid (Y, negative = toward viewer)
 FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
 CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
@@ -64,3 +64,4 @@ RIM_T = 1.2
 RIM_GAP = 0.2
 POST = 3.0              # corner post size
 ROOF_GAP = 4.0          # free space between the wheel top and the cage roof
+
