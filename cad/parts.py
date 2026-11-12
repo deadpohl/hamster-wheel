@@ -24,8 +24,8 @@ TRAY_H = BOARD_TOP + P.ESP_TOP_H + P.WIRE_ROOM + P.LID_T
 SEAT_Z = TRAY_H - P.LID_T                         # underside of the lid
 INNER_L = P.TRAY_L - 2 * P.WALL
 INNER_W = P.TRAY_W - 2 * P.WALL
-BOARD_X0 = -INNER_L / 2 + 0.6                     # USB end of the board (left)
-BOARD_X1 = BOARD_X0 + P.ESP_L
+BOARD_X1 = INNER_L / 2 - 0.6                      # USB end of the board (right)
+BOARD_X0 = BOARD_X1 - P.ESP_L
 
 # wheel housing depth: tunnel + glass + pcb + rear space
 Y_GLASS = P.WHEEL_TUBE
@@ -68,21 +68,22 @@ def tray():
     sl, sw = INNER_L + 2 * P.SEAT_W, INNER_W + 2 * P.SEAT_W
     t -= box(-sl / 2, sl / 2, -sw / 2, sw / 2, SEAT_Z, TRAY_H + 1)
 
-    # ESP32 lies lengthwise along X: central rib under the PCB (headers hang on
-    # both sides of it), low guides on the long sides and a stop at the far end
+    # ESP32 lies lengthwise along X, right under the wheel: central rib under the
+    # PCB (headers hang on both sides of it), low guides on the long sides and a
+    # stop at the far end. USB-C points to the right wall.
     yc = P.BOARD_Y
     rz = P.FLOOR - 0.1
     gz = P.FLOOR + RIB_H + P.ESP_PCB_T + 1.5
-    t += box(BOARD_X0 + 8, BOARD_X1 - 3, yc - 8, yc + 8, rz, P.FLOOR + RIB_H)
+    t += box(BOARD_X0 + 3, BOARD_X1 - 8, yc - 8, yc + 8, rz, P.FLOOR + RIB_H)
     g_in = P.ESP_W / 2 + 0.4
     for s in (-1, 1):
         a, b = sorted((yc + s * g_in, yc + s * (g_in + 1.2)))
-        t += box(BOARD_X0 + 8, BOARD_X1 - 3, a, b, rz, gz)
-    t += box(BOARD_X1 + 0.4, BOARD_X1 + 1.6, yc - g_in - 1.2, yc + g_in + 1.2, rz, gz)
+        t += box(BOARD_X0 + 3, BOARD_X1 - 8, a, b, rz, gz)
+    t += box(BOARD_X0 - 1.6, BOARD_X0 - 0.4, yc - g_in - 1.2, yc + g_in + 1.2, rz, gz)
 
-    # USB-C opening in the left wall, centred on the board
+    # USB-C opening in the right wall, centred on the board
     zc = BOARD_TOP + P.USB_AXIS_ABOVE_PCB
-    t -= box(-P.TRAY_L / 2 - 1, -INNER_L / 2 + 1, yc - P.USB_HOLE_W / 2, yc + P.USB_HOLE_W / 2,
+    t -= box(INNER_L / 2 - 1, P.TRAY_L / 2 + 1, yc - P.USB_HOLE_W / 2, yc + P.USB_HOLE_W / 2,
              zc - P.USB_HOLE_H / 2, zc + P.USB_HOLE_H / 2)
     return t
 
@@ -159,8 +160,9 @@ def place_wheel(shape):
 
 # --------------------------------------------------------------------- cage
 def _positions(length, pitch):
-    n = max(1, round(length / pitch))
-    return [-length / 2 + i * length / n for i in range(n + 1)], n
+    span = length - P.BAR_W          # outer bars end flush with the skirt
+    n = max(1, round(span / pitch))
+    return [-span / 2 + i * span / n for i in range(n + 1)], n
 
 
 def cage():
@@ -218,8 +220,8 @@ def esp32_ghost():
     """Dummy ESP32 board, only used for fit checks and previews."""
     yc = P.BOARD_Y
     b = box(BOARD_X0, BOARD_X1, yc - P.ESP_W / 2, yc + P.ESP_W / 2, BOARD_TOP - P.ESP_PCB_T, BOARD_TOP)
-    b += box(BOARD_X0 - 1.0, BOARD_X0 + 4, yc - 4.5, yc + 4.5, BOARD_TOP, BOARD_TOP + 3.3)
-    b += box(BOARD_X0 + 20, BOARD_X0 + 38, yc - 9, yc + 9, BOARD_TOP, BOARD_TOP + 3.3)
+    b += box(BOARD_X1 - 4, BOARD_X1 + 1.0, yc - 4.5, yc + 4.5, BOARD_TOP, BOARD_TOP + 3.3)
+    b += box(BOARD_X0 + 2, BOARD_X0 + 27, yc - 9, yc + 9, BOARD_TOP, BOARD_TOP + 3.3)
     for s in (-1, 1):  # header pins below the board
         y = yc + s * 11.43
         b += box(BOARD_X0 + 2, BOARD_X1 - 2, y - 1.3, y + 1.3,

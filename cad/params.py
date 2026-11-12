@@ -27,12 +27,12 @@ USB_HOLE_H = 7.0        # opening height (plug is about 6.5 high)
 USB_AXIS_ABOVE_PCB = 1.7  # height of the USB-C port axis above the PCB top
 
 # ------------------------------------------------------------------- tray
-TRAY_L = 110.0          # outer size along X
-TRAY_W = 52.0           # outer size along Y (the ESP32 lies lengthwise along X)
+TRAY_L = 68.0           # outer size along X (the wheel stands right above the ESP32)
+TRAY_W = 60.0           # outer size along Y, front to back (room for the shavings)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
 WIRE_ROOM = 4.0         # free height between the ESP32 and the lid for wires
-BOARD_Y = 0.0           # ESP32 position along Y (0 = centred). It sits at the left end, USB-C toward the left wall
+BOARD_Y = 9.0           # ESP32 position along Y (positive = toward the back, under the wire slot)
 
 # -------------------------------------------------------------------- lid
 LID_T = 3.0             # lid plate thickness (also the depth of the seat in the tray)
@@ -48,8 +48,8 @@ WHEEL_WINDOW_D = LCD_ACTIVE_D + 1.0
 WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the picture
 FOOT_H = 6.0            # height of the foot below the ring
 FOOT_W = 50.0
-WHEEL_X = 20.0          # wheel position on the lid (X)
-WHEEL_Y = 3.0           # wheel front face position on the lid (Y, negative = toward viewer)
+WHEEL_X = 0.0           # wheel position on the lid (X)
+WHEEL_Y = 8.0           # wheel front face position on the lid (Y, negative = toward viewer)
 FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
 CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
@@ -64,4 +64,5 @@ RIM_T = 1.2
 RIM_GAP = 0.2
 POST = 3.0              # corner post size
 ROOF_GAP = 4.0          # free space between the wheel top and the cage roof
+
 

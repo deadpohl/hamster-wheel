@@ -22,7 +22,7 @@ and a bit of wood shavings on the lid finishes the job.
 
 | Part | What it does |
 |---|---|
-| **Tray** (red) | Holds the ESP32 on a central rib, lying lengthwise at the left end, with a USB-C opening in the left wall for the power cable. |
+| **Tray** (red) | Holds the ESP32 on a central rib, lying lengthwise right under the wheel, with a USB-C opening in the right wall for the power cable. |
 | **Lid** | Closes the tray. Its raised border keeps the wood shavings on it. It has a seat for the wheel foot and a slot for the wires. |
 | **Wheel** and **wheel cap** (yellow) | The display sits in the ring, looking through a short tunnel (the "wheel"). The cap closes the back and hides the wires. |
 | **Cage** (blue) | One piece, printed upside down with no supports. It slides over the top of the tray. |
@@ -85,9 +85,9 @@ The STL files in [stl/](stl) are already in their print orientation. None needs 
 |---|---|---|
 | `wheel.stl` | front face on the bed | Print this one first, it is the fit test for your display. About 15 min. |
 | `wheel_cap.stl` | flange on the bed | |
-| `tray.stl` | floor on the bed | 110 x 52 x 26 mm |
+| `tray.stl` | floor on the bed | 68 x 60 x 26 mm |
 | `lid.stl` | top side up | |
-| `cage.stl` | roof on the bed | 114 x 56 x 66 mm. The bars are 1.2 mm wide: print slowly, 0.2 mm layers, 0.4 mm nozzle. |
+| `cage.stl` | roof on the bed | 71 x 63 x 66 mm. The bars are 1.2 mm wide: print slowly, 0.2 mm layers, 0.4 mm nozzle. |
 
 PLA or PETG, 0.2 mm layers, 15% infill is fine. Pick the colours you like: the original is a
 red tray, yellow wheel and light blue cage.
@@ -124,7 +124,7 @@ The script checks that every part is a closed mesh and that assembled parts do n
   <img src="docs/img/wheel_exploded.jpg" width="48%" alt="The wheel, display and cap">
 </p>
 
-1. **Solder the display.** Solder 7 wires (about 15 cm) to the display pads. If your module has
+1. **Solder the display.** Solder 7 wires (about 12 cm) to the display pads. If your module has
    a pin header, solder to the pins and trim the tips. There are 6 mm of free space behind
    the PCB, and a notch in the cap for the solder joints.
 2. **Fit the display.** Push it into the wheel from the **back**, glass first, with the wire pads
@@ -136,15 +136,17 @@ The script checks that every part is a closed mesh and that assembled parts do n
 4. **Wheel on the lid.** Feed the wires through the slot in the lid and set the foot in its seat
    (a drop of glue keeps it in place).
 5. **ESP32 in the tray.** Solder the 7 wires to the ESP32 (to the top of the header pins, see
-   the wiring table). Set the board on the central rib, USB-C end against the left wall, in line
-   with the opening. The header pins hang on both sides of the rib.
+   the wiring table). Set the board on the central rib, USB-C end against the right wall, in line
+   with the opening. With the USB-C port on the right, the pin row with GPIO 18, 23, 5, 17
+   and 16 is at the back, right under the wire slot (3V3 is in the other row, at the far end).
+   The wheel stands right above the board, so the wires are short. The header pins hang on both sides of the rib.
 6. **Close the tray.** Drop the lid into its seat. The wheel is now stuck to the lid and the
    whole thing opens like a box.
 7. **Cage.** Slide the cage over the top of the tray: its skirt wraps the upper 8 mm. It is a
    friction fit, a dot of glue makes it permanent.
 8. **Shavings.** Spread a few on the lid. This toy is a decoration: no real hamster inside.
 
-The USB-C cable goes through the left side of the tray. It powers the ESP32 and also lets you
+The USB-C cable goes through the right side of the tray. It powers the ESP32 and also lets you
 re-flash it without opening anything.
 
 ## Change the animation
@@ -215,4 +217,5 @@ release/    (not tracked) the merged firmware image is attached to GitHub Releas
   [build123d](https://github.com/gumyr/build123d) for the models.
 
 By DeadPohl, <https://www.instagram.com/_deadpohl_>
+
 
