@@ -1,14 +1,13 @@
-﻿"""Parametric parts of the hamster wheel desk toy (build123d).
+﻿"""Parametric parts of the hamster wheel desk toy (build123d): tray, lid, wheel, cap.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
 Every builder returns a solid in ASSEMBLY coordinates:
   X = left/right, Y = front (negative, toward the viewer) to back, Z = up,
   origin = centre of the tray footprint, Z = 0 on the table.
-build_all.py reorients each part for printing.
+build_all.py reorients each part for printing. The cage lives in cage.py.
 """
-from functools import reduce
-from math import ceil
+from math import hypot
 
 from build123d import Align, Box, Cone, Cylinder, Plane, Polygon, Pos, Rot, extrude
 
@@ -16,6 +15,7 @@ import params as P
 
 MIN = (Align.MIN, Align.MIN, Align.MIN)
 CEN = (Align.CENTER, Align.CENTER, Align.MIN)
+SQ = 2 - 2 ** 0.5   # change of a 45 degree chamfer per mm of outline offset
 
 # ------------------------------------------------------------ derived values
 RIB_H = P.ESP_PIN_LEN + 0.5                       # the board sits on a central rib
@@ -24,7 +24,7 @@ TRAY_H = BOARD_TOP + P.ESP_TOP_H + P.WIRE_ROOM + P.LID_T
 SEAT_Z = TRAY_H - P.LID_T                         # underside of the lid
 INNER_L = P.TRAY_L - 2 * P.WALL
 INNER_W = P.TRAY_W - 2 * P.WALL
-BOARD_X1 = INNER_L / 2 - 0.6                      # USB end of the board (right)
+BOARD_X1 = INNER_L / 2 - 1.2                      # USB end of the board (right)
 BOARD_X0 = BOARD_X1 - P.ESP_L
 
 # wheel housing depth: tunnel + glass + pcb + rear space
@@ -39,10 +39,9 @@ WHEEL_Z = TRAY_H - POCKET_D                       # assembly Z of the foot base
 CHAN_W = 20.0                                     # wire channel width in the foot
 TAIL_W = 24.0                                     # cap tail width over the channel
 
-CAGE_RIM_OUT_L = P.TRAY_L + 2 * (P.RIM_GAP + P.RIM_T)
-CAGE_RIM_OUT_W = P.TRAY_W + 2 * (P.RIM_GAP + P.RIM_T)
-ROOF_IN_Z = WHEEL_Z + WHEEL_H + P.ROOF_GAP
-CAGE_TOP_Z = ROOF_IN_Z + P.ROOF_T
+SKIRT_GAP = P.RIM_GAP + P.CAGE_T                  # cage skirt: how far it stands off the tray
+STOP_Z = TRAY_H - P.RIM_H                         # the cage skirt rests on the tray stops here
+GROOVE_Z = TRAY_H - 5.5                           # centre of the snap groove
 
 
 # ------------------------------------------------------------------ helpers
@@ -60,13 +59,51 @@ def fuse_all(shapes):
     return shapes[0].fuse(*shapes[1:]).clean()
 
 
+def oct_pts(a, b, c):
+    """Clockwise outline of a rectangle (half sizes a, b) with its corners cut by c."""
+    if c < 0.01:
+        return [(-a, b), (a, b), (a, -b), (-a, -b)]
+    return [(-(a - c), b), (a - c, b), (a, b - c), (a, -(b - c)), (a - c, -b), (-(a - c), -b),
+            (-a, -(b - c)), (-a, b - c)]
+
+
+def outline(d=0.0):
+    """Tray outline offset by d mm (positive = outward), as clockwise points."""
+    c = max(0.0, P.CORNER_CUT + SQ * d) if P.CORNER_CUT > 0 else 0.0
+    return oct_pts(P.TRAY_L / 2 + d, P.TRAY_W / 2 + d, c)
+
+
+def prism(pts, z0, z1):
+    # both=True: the extrusion is symmetric, so the winding order of pts does not matter
+    return Pos(0, 0, (z0 + z1) / 2) * extrude(Polygon(*pts, align=None), amount=(z1 - z0) / 2, both=True)
+
+
+def edges(pts):
+    """Yield (midpoint, unit tangent, outward normal, length) of each edge of a clockwise polygon."""
+    for i, p in enumerate(pts):
+        q = pts[(i + 1) % len(pts)]
+        ln = hypot(q[0] - p[0], q[1] - p[1])
+        tx, ty = (q[0] - p[0]) / ln, (q[1] - p[1]) / ln
+        yield ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), (tx, ty), (-ty, tx), ln
+
+
 # --------------------------------------------------------------------- tray
 def tray():
-    t = box(-P.TRAY_L / 2, P.TRAY_L / 2, -P.TRAY_W / 2, P.TRAY_W / 2, 0, TRAY_H)
-    t -= box(-INNER_L / 2, INNER_L / 2, -INNER_W / 2, INNER_W / 2, P.FLOOR, TRAY_H + 1)
+    t = prism(outline(0), 0, TRAY_H)
+    t -= prism(outline(-P.WALL), P.FLOOR, TRAY_H + 1)
     # seat for the lid: the opening widens by SEAT_W in the top LID_T millimetres
-    sl, sw = INNER_L + 2 * P.SEAT_W, INNER_W + 2 * P.SEAT_W
-    t -= box(-sl / 2, sl / 2, -sw / 2, sw / 2, SEAT_Z, TRAY_H + 1)
+    t -= prism(outline(-(P.WALL - P.SEAT_W)), SEAT_Z, TRAY_H + 1)
+
+    # the cage skirt snaps into a groove all around, and rests on small stops
+    t -= prism(outline(1), GROOVE_Z - 1.0, GROOVE_Z + 1.0) - prism(outline(-P.GROOVE_D), GROOVE_Z - 1.0, GROOVE_Z + 1.0)
+    for (mx, my), (tx, ty), (nx, ny), ln in edges(outline(0)):
+        w = min(10.0, ln - 4)
+        if w < 3:
+            continue
+        d = SKIRT_GAP
+        pl = Plane(origin=(mx, my, STOP_Z), x_dir=(nx, ny, 0), z_dir=(tx, ty, 0))
+        gusset = extrude(pl * Polygon((-0.3, 0), (d, 0), (0, -d), (-0.3, -d), align=None), amount=w / 2, both=True)
+        t += gusset
 
     # ESP32 lies lengthwise along X, right under the wheel: central rib under the
     # PCB (headers hang on both sides of it), low guides on the long sides and a
@@ -90,12 +127,10 @@ def tray():
 
 # ---------------------------------------------------------------------- lid
 def lid():
-    hl = INNER_L / 2 + P.SEAT_W - P.LID_FIT
-    hw = INNER_W / 2 + P.SEAT_W - P.LID_FIT
-    plate = box(-hl, hl, -hw, hw, SEAT_Z, TRAY_H)
-    border = box(-hl, hl, -hw, hw, TRAY_H, TRAY_H + P.LID_BORDER_H)
-    border -= box(-hl + P.LID_BORDER_W, hl - P.LID_BORDER_W, -hw + P.LID_BORDER_W,
-                  hw - P.LID_BORDER_W, TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
+    d = P.WALL - P.SEAT_W + P.LID_FIT
+    plate = prism(outline(-d), SEAT_Z, TRAY_H)
+    border = prism(outline(-d), TRAY_H, TRAY_H + P.LID_BORDER_H) \
+        - prism(outline(-d - P.LID_BORDER_W), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
     lid_ = plate + border
     # seat for the wheel foot and slot for the wires
     x0 = P.WHEEL_X - P.FOOT_W / 2 - 0.25
@@ -116,6 +151,7 @@ def _foot_prism():
     top = P.WHEEL_D / 2 * 0.8
     prof = Plane.XZ * Polygon((-fw, 0), (fw, 0), (top, H_CENTER), (-top, H_CENTER), align=None)
     return extrude(prof, amount=-WHEEL_DEPTH)
+
 
 def wheel():
     """Ring housing and foot, in WHEEL coordinates (X centred, Y front=0, Z base=0)."""
@@ -158,63 +194,6 @@ def place_wheel(shape):
     return Pos(P.WHEEL_X, P.WHEEL_Y, WHEEL_Z) * shape
 
 
-# --------------------------------------------------------------------- cage
-def _positions(length, pitch):
-    span = length - P.BAR_W          # outer bars end flush with the skirt
-    n = max(1, round(span / pitch))
-    return [-span / 2 + i * span / n for i in range(n + 1)], n
-
-
-def cage():
-    L, W = CAGE_RIM_OUT_L, CAGE_RIM_OUT_W
-    z_rim0 = TRAY_H - P.RIM_H
-    z_bars0 = TRAY_H
-    parts = []
-
-    # skirt that wraps the top of the tray
-    rim = box(-L / 2, L / 2, -W / 2, W / 2, z_rim0, z_bars0)
-    rim -= box(-L / 2 + P.RIM_T, L / 2 - P.RIM_T, -W / 2 + P.RIM_T, W / 2 - P.RIM_T,
-               z_rim0 - 1, z_bars0 + 1)
-    parts.append(rim)
-
-    # corner posts
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            xa, xb = sorted((sx * L / 2, sx * (L / 2 - P.POST)))
-            ya, yb = sorted((sy * W / 2, sy * (W / 2 - P.POST)))
-            parts.append(box(xa, xb, ya, yb, z_bars0, ROOF_IN_Z))
-
-    zs = [z_bars0 + i * (ROOF_IN_Z - z_bars0) / round((ROOF_IN_Z - z_bars0) / P.PITCH)
-          for i in range(round((ROOF_IN_Z - z_bars0) / P.PITCH) + 1)]
-    bw = P.BAR_W
-    xs, _ = _positions(L, P.PITCH)
-    ys, _ = _positions(W, P.PITCH)
-
-    def belt(z):
-        za = min(max(z - bw / 2, z_bars0), ROOF_IN_Z - bw)
-        return za, za + bw
-
-    for sy in (-1, 1):  # front and back walls (full length along X)
-        ya, yb = sorted((sy * W / 2, sy * (W / 2 - P.RIM_T)))
-        for x in xs:
-            parts.append(box(x - bw / 2, x + bw / 2, ya, yb, z_bars0, ROOF_IN_Z))
-        for z in zs:
-            parts.append(box(-L / 2, L / 2, ya, yb, *belt(z)))
-    for sx in (-1, 1):  # side walls
-        xa, xb = sorted((sx * L / 2, sx * (L / 2 - P.RIM_T)))
-        for y in ys:
-            parts.append(box(xa, xb, y - bw / 2, y + bw / 2, z_bars0, ROOF_IN_Z))
-        for z in zs:
-            parts.append(box(xa, xb, -W / 2, W / 2, *belt(z)))
-    # roof: border frame and lattice
-    z0, z1 = ROOF_IN_Z, CAGE_TOP_Z
-    for x in xs:
-        parts.append(box(x - bw / 2, x + bw / 2, -W / 2, W / 2, z0 - 0.01, z1))
-    for y in ys:
-        parts.append(box(-L / 2, L / 2, y - bw / 2, y + bw / 2, z0 - 0.01, z1))
-    return fuse_all(parts)
-
-
 # ---------------------------------------------------------- reference models
 def esp32_ghost():
     """Dummy ESP32 board, only used for fit checks and previews."""
@@ -228,6 +207,7 @@ def esp32_ghost():
                  BOARD_TOP - P.ESP_PCB_T - P.ESP_PIN_LEN, BOARD_TOP - P.ESP_PCB_T)
     return b
 
+
 def lcd_ghost():
     """Dummy GC9A01 module in wheel coordinates (for fit checks)."""
     zc = H_CENTER
@@ -235,6 +215,4 @@ def lcd_ghost():
     glass = cyl_y(P.LCD_GLASS_D, Y_GLASS, Y_PCB, z=zc)
     header = box(-8.9, 8.9, Y_BACK, Y_BACK + 2.5, zc - P.LCD_PCB_D / 2 + 1, zc - P.LCD_PCB_D / 2 + 3.5)
     return pcb + glass + header
-
-
 

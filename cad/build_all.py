@@ -1,4 +1,4 @@
-"""Build every printable part, check it, and write the STL files and previews.
+﻿"""Build every printable part, check it, and write the STL files and previews.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
@@ -15,6 +15,7 @@ from pathlib import Path
 import trimesh
 from build123d import Pos, Rot, export_stl
 
+import cage as C
 import parts as K
 import params as P
 
@@ -36,7 +37,7 @@ def print_parts():
         "lid": to_bed(K.lid()),                         # top side up
         "wheel": to_bed(Rot(X=90) * K.wheel()),         # front face on the bed
         "wheel_cap": to_bed(Rot(X=-90) * K.cap()),      # flange on the bed
-        "cage": to_bed(Rot(X=180) * K.cage()),          # roof on the bed
+        "cage_net": to_bed(C.net()),                    # flat net, outer faces on the bed
     }
 
 
@@ -46,7 +47,7 @@ def assembly_parts():
         "lid": K.lid(),
         "wheel": K.place_wheel(K.wheel()),
         "wheel_cap": K.place_wheel(K.cap()),
-        "cage": K.cage(),
+        "cage": C.folded(),
     }
 
 
@@ -69,7 +70,10 @@ def main():
         path = STL_DIR / f"{name}.stl"
         export_stl(shape, str(path), tolerance=0.01, angular_tolerance=0.1)
         m = trimesh.load(path)
-        bad = not (m.is_watertight and m.is_winding_consistent and len(m.split(only_watertight=False)) == 1)
+        # the net is one body when the hinges are on, several panels otherwise
+        one_body = name != "cage_net" or P.HINGES
+        bad = not (m.is_watertight and m.is_winding_consistent
+                   and (not one_body or len(m.split(only_watertight=False)) == 1))
         ok &= not bad
         e = m.extents
         print(f"  {name:10s} {e[0]:6.1f} x {e[1]:6.1f} x {e[2]:6.1f} mm  "
@@ -97,3 +101,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -25,7 +25,7 @@ and a bit of wood shavings on the lid finishes the job.
 | **Tray** (red) | Holds the ESP32 on a central rib, lying lengthwise right under the wheel, with a USB-C opening in the right wall for the power cable. |
 | **Lid** | Closes the tray. Its raised border keeps the wood shavings on it. It has a seat for the wheel foot and a slot for the wires. |
 | **Wheel** and **wheel cap** (yellow) | The display sits in the ring, looking through a short tunnel (the "wheel"). The cap closes the back and hides the wires. |
-| **Cage** (blue) | One piece, printed upside down with no supports. It slides over the top of the tray. |
+| **Cage** (blue) | Printed **flat** in one go: the roof in the middle and a wall hinged around each edge. You fold it, glue the corners, and it snaps onto the tray. The bars are far apart so you can see the wheel. |
 
 ## What you need
 
@@ -85,12 +85,17 @@ The STL files in [stl/](stl) are already in their print orientation. None needs 
 |---|---|---|
 | `wheel.stl` | front face on the bed | Print this one first, it is the fit test for your display. About 15 min. |
 | `wheel_cap.stl` | flange on the bed | |
-| `tray.stl` | floor on the bed | 68 x 60 x 26 mm |
+| `tray.stl` | floor on the bed | 92 x 58 x 26 mm (96 x 62 with the small stops) |
 | `lid.stl` | top side up | |
-| `cage.stl` | roof on the bed | 71 x 63 x 66 mm. The bars are 1.2 mm wide: print slowly, 0.2 mm layers, 0.4 mm nozzle. |
+| `cage_net.stl` | flat, outer faces on the bed | **231 x 197 x 2.6 mm**, so it needs a bed of 250 mm or more. **Print it in PETG**: the 8 hinges are 0.6 mm films that PLA would crack. |
 
-PLA or PETG, 0.2 mm layers, 15% infill is fine. Pick the colours you like: the original is a
-red tray, yellow wheel and light blue cage.
+PLA or PETG, 0.2 mm layers, 15% infill is fine for the rest. Pick the colours you like: the original
+is a red tray, yellow wheel and light blue cage.
+
+**About the cage net.** It is only 2 mm thick, so it prints fast and uses little plastic. Slow the
+first layers down a little. If your bed is smaller than 250 mm, or you prefer PLA, set
+`HINGES = False` in `cad/params.py`: the walls then print as separate panels and you glue them to
+the roof (the mitred edges make that easy).
 
 ### Adjust the dimensions to your parts
 
@@ -107,6 +112,10 @@ so measure yours with calipers and edit the lines tagged `measure me` in
 | `ESP_PIN_LEN` | how far the header pins stick out below the board |
 | `USB_HOLE_W`, `USB_HOLE_H` | size of your USB-C plug body (some cables have a big moulded end) |
 
+The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint), `CORNER_CUT` (the
+chamfered corners, 0 for square ones), `WALL_PITCH` (gap between the cage bars) and the hinge
+settings.
+
 Then regenerate the STL files:
 
 ```
@@ -122,6 +131,9 @@ The script checks that every part is a closed mesh and that assembled parts do n
 <p align="center">
   <img src="docs/img/exploded.jpg" width="40%" alt="Exploded view">
   <img src="docs/img/wheel_exploded.jpg" width="48%" alt="The wheel, display and cap">
+</p>
+<p align="center">
+  <img src="docs/img/cage_net.jpg" width="60%" alt="The cage net as printed, flat">
 </p>
 
 1. **Solder the display.** Solder 7 wires (about 12 cm) to the display pads. If your module has
@@ -142,8 +154,12 @@ The script checks that every part is a closed mesh and that assembled parts do n
    The wheel stands right above the board, so the wires are short. The header pins hang on both sides of the rib.
 6. **Close the tray.** Drop the lid into its seat. The wheel is now stuck to the lid and the
    whole thing opens like a box.
-7. **Cage.** Slide the cage over the top of the tray: its skirt wraps the upper 8 mm. It is a
-   friction fit, a dot of glue makes it permanent.
+7. **Cage.** Cut the net free of the bed, then fold the 8 walls up around the roof (the hinges are
+   on the outside, the mitred edges close into the corners). Glue the 8 vertical edges with a
+   drop of cyanoacrylate each, holding them for a few seconds. Then push the cage down over the
+   tray: the solid skirt at the bottom wraps the tray, the small bump on each wall snaps into
+   the groove around the tray, and the skirt stops on the little stops. It stays on but you can
+   still pull it off to reach the lid.
 8. **Shavings.** Spread a few on the lid. This toy is a decoration: no real hamster inside.
 
 The USB-C cable goes through the right side of the tray. It powers the ESP32 and also lets you
@@ -201,7 +217,7 @@ have to edit a library file. User settings (screen rotation) are in
 ```
 firmware/   PlatformIO project (ESP32, TFT_eSPI, TJpg_Decoder), animation in assets/
 cad/        parametric 3D model generator (build123d), params.py holds every dimension
-stl/        ready to print files
+stl/        ready to print files (the cage is one flat net, cage_net.stl)
 tools/      make_animation.py: GIF to animation.bin
 docs/img/   pictures used in this README
 release/    (not tracked) the merged firmware image is attached to GitHub Releases
@@ -217,5 +233,6 @@ release/    (not tracked) the merged firmware image is attached to GitHub Releas
   [build123d](https://github.com/gumyr/build123d) for the models.
 
 By DeadPohl, <https://www.instagram.com/_deadpohl_>
+
 
 
