@@ -9,7 +9,7 @@ build_all.py reorients each part for printing. The cage lives in cage.py.
 """
 from math import hypot
 
-from build123d import Align, Box, Cone, Cylinder, Plane, Polygon, Pos, Rot, extrude
+from build123d import Align, Box, Cone, Cylinder, Location, Plane, Polygon, Pos, Rot, extrude
 
 import params as P
 
@@ -39,9 +39,14 @@ WHEEL_Z = TRAY_H - POCKET_D                       # assembly Z of the foot base
 CHAN_W = 20.0                                     # wire channel width in the foot
 TAIL_W = 24.0                                     # cap tail width over the channel
 
-SKIRT_GAP = P.RIM_GAP + P.CAGE_T                  # cage skirt: how far it stands off the tray
-STOP_Z = TRAY_H - P.RIM_H                         # the cage skirt rests on the tray stops here
-GROOVE_Z = TRAY_H - 5.5                           # centre of the snap groove
+# Lid rim: two thin walls with a groove between them, the cage walls plug into it.
+# Offsets are distances inward from the tray outline.
+LID_OFF = P.WALL - P.SEAT_W + P.LID_FIT           # outer face of the lid
+GROOVE_W = P.CAGE_T + 2 * P.CAGE_FIT              # groove width
+CAGE_OFF = LID_OFF + P.LID_RIM_W + P.CAGE_FIT     # outer face of the cage walls
+GROOVE_IN_OFF = LID_OFF + P.LID_RIM_W + GROOVE_W  # inner face of the groove (outer face of the inner wall)
+RIM_IN_OFF = GROOVE_IN_OFF + P.LID_RIM_W          # inner face of the inner wall
+OUTER_WALL_H = P.LID_BORDER_H - 2.0               # lower outer wall: easier to guide the cage in
 
 
 # ------------------------------------------------------------------ helpers
@@ -94,17 +99,6 @@ def tray():
     # seat for the lid: the opening widens by SEAT_W in the top LID_T millimetres
     t -= prism(outline(-(P.WALL - P.SEAT_W)), SEAT_Z, TRAY_H + 1)
 
-    # the cage skirt snaps into a groove all around, and rests on small stops
-    t -= prism(outline(1), GROOVE_Z - 1.0, GROOVE_Z + 1.0) - prism(outline(-P.GROOVE_D), GROOVE_Z - 1.0, GROOVE_Z + 1.0)
-    for (mx, my), (tx, ty), (nx, ny), ln in edges(outline(0)):
-        w = min(10.0, ln - 4)
-        if w < 3:
-            continue
-        d = SKIRT_GAP
-        pl = Plane(origin=(mx, my, STOP_Z), x_dir=(nx, ny, 0), z_dir=(tx, ty, 0))
-        gusset = extrude(pl * Polygon((-0.3, 0), (d, 0), (0, -d), (-0.3, -d), align=None), amount=w / 2, both=True)
-        t += gusset
-
     # ESP32 lies lengthwise along X, right under the wheel: central rib under the
     # PCB (headers hang on both sides of it), low guides on the long sides and a
     # stop at the far end. USB-C points to the right wall.
@@ -127,17 +121,32 @@ def tray():
 
 # ---------------------------------------------------------------------- lid
 def lid():
-    d = P.WALL - P.SEAT_W + P.LID_FIT
-    plate = prism(outline(-d), SEAT_Z, TRAY_H)
-    border = prism(outline(-d), TRAY_H, TRAY_H + P.LID_BORDER_H) \
-        - prism(outline(-d - P.LID_BORDER_W), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
-    lid_ = plate + border
+    plate = prism(outline(-LID_OFF), SEAT_Z, TRAY_H)
+    # rim: a low outer wall and a tall inner wall, with the cage groove between them
+    outer = prism(outline(-LID_OFF), TRAY_H, TRAY_H + OUTER_WALL_H) \
+        - prism(outline(-LID_OFF - P.LID_RIM_W), TRAY_H - 1, TRAY_H + OUTER_WALL_H + 1)
+    inner = prism(outline(-GROOVE_IN_OFF), TRAY_H, TRAY_H + P.LID_BORDER_H) \
+        - prism(outline(-RIM_IN_OFF), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
+    lid_ = plate + outer + inner
+
+    # one dimple per wall, where the snap bump of the cage clicks in
+    pts = outline(-GROOVE_IN_OFF)
+    for (mx, my), (tx, ty), (nx, ny), ln in edges(pts):
+        if ln > 8:
+            pl = Plane(origin=(mx, my, TRAY_H + 2.5), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
+            lid_ -= Location(pl) * (Pos(0, 0, -0.1) * Cone(
+                P.BUMP_R + 0.4, P.BUMP_R - 0.1, P.DIMPLE_D + 0.1, align=CEN))
+
     # seat for the wheel foot and slot for the wires
     x0 = P.WHEEL_X - P.FOOT_W / 2 - 0.25
     x1 = P.WHEEL_X + P.FOOT_W / 2 + 0.25
     y0 = P.WHEEL_Y - 0.25
     y1 = P.WHEEL_Y + WHEEL_DEPTH + P.CAP_T + 0.25
-    lid_ -= box(x0, x1, y0, y1, TRAY_H - POCKET_D, TRAY_H + 1)
+    pocket = box(x0, x1, y0, y1, TRAY_H - POCKET_D, TRAY_H + 1)
+    if abs((pocket & inner).volume) > 0.1:
+        raise ValueError("the wheel foot does not fit inside the lid rim: "
+                         "increase TRAY_L / TRAY_W or move the wheel (WHEEL_X, WHEEL_Y)")
+    lid_ -= pocket
     lid_ -= box(P.WHEEL_X - CHAN_W / 2 - 1, P.WHEEL_X + CHAN_W / 2 + 1,
                 P.WHEEL_Y + Y_BACK - 0.5, P.WHEEL_Y + WHEEL_DEPTH + P.CAP_T,
                 SEAT_Z - 1, TRAY_H + 1)

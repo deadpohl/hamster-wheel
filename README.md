@@ -23,9 +23,9 @@ and a bit of wood shavings on the lid finishes the job.
 | Part | What it does |
 |---|---|
 | **Tray** (red) | Holds the ESP32 on a central rib, lying lengthwise right under the wheel, with a USB-C opening in the right wall for the power cable. |
-| **Lid** | Closes the tray. Its raised border keeps the wood shavings on it. It has a seat for the wheel foot and a slot for the wires. |
+| **Lid** | Closes the tray. Its raised rim keeps the wood shavings on it and has a **groove all around where the cage plugs in**. It also has a seat for the wheel foot and a slot for the wires. |
 | **Wheel** and **wheel cap** (yellow) | The display sits in the ring, looking through a short tunnel (the "wheel"). The cap closes the back and hides the wires. |
-| **Cage** (blue) | Printed **flat** in one go: the roof in the middle and a wall hinged around each edge. You fold it, glue the corners, and it snaps onto the tray. The bars are far apart so you can see the wheel. |
+| **Cage** (blue) | Printed **flat** in one go: the roof in the middle and a wall hinged around each edge. You fold it and push it into the groove of the lid: **no glue**. The bars are far apart so you can see the wheel. |
 
 ## What you need
 
@@ -85,17 +85,16 @@ The STL files in [stl/](stl) are already in their print orientation. None needs 
 |---|---|---|
 | `wheel.stl` | front face on the bed | Print this one first, it is the fit test for your display. About 15 min. |
 | `wheel_cap.stl` | flange on the bed | |
-| `tray.stl` | floor on the bed | 92 x 58 x 26 mm (96 x 62 with the small stops) |
-| `lid.stl` | top side up | |
-| `cage_net.stl` | flat, outer faces on the bed | **231 x 197 x 2.6 mm**, so it needs a bed of 250 mm or more. **Print it in PETG**: the 8 hinges are 0.6 mm films that PLA would crack. |
+| `tray.stl` | floor on the bed | 94 x 60 x 26 mm |
+| `lid.stl` | top side up | 91 x 57 x 10 mm |
+| `cage_net.stl` | flat, outer faces on the bed | 206 x 172 x 2.6 mm, fits a 220 mm bed. **Print it in PETG**: the 8 hinges are 0.6 mm films that PLA would crack. |
 
 PLA or PETG, 0.2 mm layers, 15% infill is fine for the rest. Pick the colours you like: the original
 is a red tray, yellow wheel and light blue cage.
 
 **About the cage net.** It is only 2 mm thick, so it prints fast and uses little plastic. Slow the
-first layers down a little. If your bed is smaller than 250 mm, or you prefer PLA, set
-`HINGES = False` in `cad/params.py`: the walls then print as separate panels and you glue them to
-the roof (the mitred edges make that easy).
+first layers down a little. If you prefer PLA, set `HINGES = False` in `cad/params.py`: the walls
+then print as separate panels and you glue them to the roof (the mitred edges make that easy).
 
 ### Adjust the dimensions to your parts
 
@@ -154,12 +153,14 @@ The script checks that every part is a closed mesh and that assembled parts do n
    The wheel stands right above the board, so the wires are short. The header pins hang on both sides of the rib.
 6. **Close the tray.** Drop the lid into its seat. The wheel is now stuck to the lid and the
    whole thing opens like a box.
-7. **Cage.** Cut the net free of the bed, then fold the 8 walls up around the roof (the hinges are
-   on the outside, the mitred edges close into the corners). Glue the 8 vertical edges with a
-   drop of cyanoacrylate each, holding them for a few seconds. Then push the cage down over the
-   tray: the solid skirt at the bottom wraps the tray, the small bump on each wall snaps into
-   the groove around the tray, and the skirt stops on the little stops. It stays on but you can
-   still pull it off to reach the lid.
+7. **Cage.** Take the net off the bed and fold the 8 walls toward the side that was facing up
+   while printing, so the hinge films end up on the outside and the mitred edges meet in the
+   corners. Then turn it over (roof on top), set the cage on the lid and push
+   the solid skirts at the bottom of the walls into the groove that runs around the rim. The
+   groove holds every wall in place, which closes the corners without glue, and the small bump
+   on each wall clicks into a dimple of the rim. Pull it straight up to take it off, and you can
+   then lift the lid with the wheel to reach the ESP32. The lower outer wall of the rim guides
+   the walls in: start with the long sides.
 8. **Shavings.** Spread a few on the lid. This toy is a decoration: no real hamster inside.
 
 The USB-C cable goes through the right side of the tray. It powers the ESP32 and also lets you

@@ -1,12 +1,13 @@
-﻿"""The cage: printed flat as one net, folded into a cage around the tray.
+﻿"""The cage: printed flat as one net, folded into a cage that plugs into the lid.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
 The net is a roof in the middle with one wall panel around each of its edges,
 joined by thin living hinges. Everything is printed with the OUTER faces on the
-bed (no supports). Fold the walls up 90 degrees, glue the mitred corners, then
-push the cage down over the tray: the skirt at the bottom of the walls wraps the
-tray, snaps into its groove and rests on its stops.
+bed (no supports). Fold the walls up 90 degrees and push their solid skirts into
+the groove that runs around the rim of the lid: the groove holds every panel in
+place, so the mitred corners close without glue, and a small bump on each wall
+clicks into a dimple of the lid rim.
 
 Panel frame (used for the flat net and for the folded cage):
   X = along the edge, Y = h, distance from the roof (0 at the top, HW at the skirt),
@@ -21,9 +22,8 @@ import parts as K
 from parts import box, edges, fuse_all, outline, prism
 
 T = P.CAGE_T
-GAP_OUT = P.RIM_GAP + T                      # skirt outer face offset from the tray outline
 CAGE_TOP = K.WHEEL_Z + K.WHEEL_H + P.ROOF_GAP + T   # Z of the outer face of the roof
-HW = CAGE_TOP - K.STOP_Z                     # wall height: roof to the bottom of the skirt
+HW = CAGE_TOP - K.TRAY_H                     # wall height: roof to the bottom of the skirt (groove floor)
 FILM = P.HINGE_FILM
 
 
@@ -48,12 +48,12 @@ def _spread(half, pitch):
 
 # ----------------------------------------------------------------- roof
 def roof():
-    r_pts = outline(GAP_OUT)
+    r_pts = outline(-K.CAGE_OFF)
     # full thickness at the hinge film, then a 45 degree bevel on the inner face so
     # that the mitre closes when the wall is folded
     plate = prism(r_pts, 0, FILM) + Pos(0, 0, FILM) * extrude(
         Polygon(*r_pts[::-1], align=None), amount=T - FILM, taper=45)
-    win_pts = outline(GAP_OUT - P.RAIL_W)
+    win_pts = outline(-K.CAGE_OFF - P.RAIL_W)
     xs = [p[0] for p in win_pts]
     ys = [p[1] for p in win_pts]
     ax, ay = max(xs), max(ys)
@@ -103,7 +103,7 @@ def wall_panel(length, front, beta_tan):
 
 def _panels():
     """List of (panel, edge midpoint, tangent, outward normal, length)."""
-    pts = outline(GAP_OUT)
+    pts = outline(-K.CAGE_OFF)
     beta_tan = tan(radians(_vertex_angle(pts) / 2))
     out = []
     for (m, t, n, ln) in edges(pts):
@@ -133,4 +133,5 @@ def folded():
         frame = Plane(origin=(mx, my, 0), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
         parts.append(Location(frame) * panel)
     return Pos(0, 0, CAGE_TOP) * (Rot(X=180) * _fuse(parts))
+
 
