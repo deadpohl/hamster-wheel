@@ -83,7 +83,8 @@ def wall_panel(length, front, beta_tan):
 
     # snap bump on the inner face of the skirt (fits the groove in the tray wall)
     if length > 10:                          # same rule as the dimples of the lid
-        body += Pos(0, HW - 2.5, T - 0.1) * Cone(P.BUMP_R + 0.2, P.BUMP_R - 0.2, P.BUMP_R + 0.1,
+        # tall enough to cross the clearance of the groove and still reach into the dimple
+        body += Pos(0, HW - 2.5, T - 0.1) * Cone(P.BUMP_R + 0.3, P.BUMP_R - 0.2, P.CAGE_FIT + 0.6,
                                                     align=(Align.CENTER, Align.CENTER, Align.MIN))
 
     # mitre at both vertical edges: the outer face keeps the full length
@@ -93,6 +94,11 @@ def wall_panel(length, front, beta_tan):
                (s * (e + 5), T + 1), (s * (e + 5), -1)]
         cut = extrude(Plane.XZ * Polygon(*pts, align=None), amount=(HW + 2) / 2, both=True)
         body -= Pos(0, HW / 2, 0) * cut
+
+    # lead-in: chamfer on the inner face at the bottom of the skirt, so it slides into the groove
+    c = P.LEAD_IN
+    tri = [(HW - c, T + 0.1), (HW + 0.1, T - c), (HW + 0.1, T + 0.1)]
+    body -= extrude(Plane.YZ * Polygon(*tri, align=None), amount=length + 2, both=True)
 
     # 45 degree bevel on the inner face at the hinge (top) end
     bev = [(-1, FILM), (0, FILM), (T + 1 - FILM, T + 1), (-1, T + 1)]

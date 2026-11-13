@@ -155,10 +155,16 @@ def tray():
 def lid():
     plate = prism(outline(-LID_OFF), SEAT_Z, TRAY_H)
     # rim: a low outer wall and a tall inner wall, with the cage groove between them
+    c = P.LEAD_IN
     outer = prism(outline(-LID_OFF), TRAY_H, TRAY_H + OUTER_WALL_H) \
         - prism(outline(-LID_OFF - P.LID_RIM_W), TRAY_H - 1, TRAY_H + OUTER_WALL_H + 1)
-    inner = prism(outline(-GROOVE_IN_OFF), TRAY_H, TRAY_H + P.LID_BORDER_H) \
-        - prism(outline(-RIM_IN_OFF), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
+    # lead-in: the groove side of each wall is chamfered at the top, so the mouth is wider
+    outer -= Pos(0, 0, TRAY_H + OUTER_WALL_H - c) * extrude(
+        Polygon(*outline(-LID_OFF - P.LID_RIM_W)[::-1], align=None), amount=c + 0.01, taper=-45)
+    inner = prism(outline(-GROOVE_IN_OFF), TRAY_H, TRAY_H + P.LID_BORDER_H - c) \
+        + Pos(0, 0, TRAY_H + P.LID_BORDER_H - c) * extrude(
+            Polygon(*outline(-GROOVE_IN_OFF)[::-1], align=None), amount=c, taper=45)
+    inner -= prism(outline(-RIM_IN_OFF), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
     lid_ = plate + outer + inner
 
     # one dimple per wall, where the snap bump of the cage clicks in

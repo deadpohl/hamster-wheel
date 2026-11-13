@@ -75,10 +75,12 @@ ROOF_PITCH = 14.0       # bar spacing on the roof
 POST_W = 4.0            # solid post at each vertical edge of a wall
 RAIL_W = 3.5            # solid top rail of the walls and border of the roof
 RIM_H = 8.0             # solid skirt at the bottom of the walls, plugs into the groove of the lid
-CAGE_FIT = 0.2          # clearance on each side of the skirt in the groove
+CAGE_FIT = 0.5          # clearance on each side of the skirt in the groove (the folded cage is floppy)
+LEAD_IN = 0.6           # chamfer that guides the walls into the groove (mouth of the groove, skirt edge)
 ROOF_GAP = 3.0          # free space between the wheel top and the cage roof
 HINGES = True           # False: no hinge film, the panels print separately and you glue them
-HINGE_FILM = 0.6        # thickness of the living hinge (3 layers at 0.2 mm). PETG recommended
-HINGE_W = 1.2           # width of the hinge film
+HINGE_FILM = 0.4        # thickness of the living hinge (2 layers at 0.2 mm). PETG recommended
+HINGE_W = 1.6           # width of the hinge film (longer and thinner = less stress when folding)
 BUMP_R = 0.6            # snap bump on each wall (clicks into a dimple in the lid rim)
-DIMPLE_D = 0.5          # depth of that dimple
+DIMPLE_D = 0.6          # depth of that dimple
+

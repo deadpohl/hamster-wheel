@@ -91,12 +91,12 @@ The STL files in [stl/](stl) are already in their print orientation. None needs 
 | `wheel_cover.stl` | roof of the cover on the bed | 40 x 21 x 24 mm |
 | `tray.stl` | floor on the bed | 90 x 68 x 16 mm |
 | `lid.stl` | top side up | 87 x 65 x 10 mm |
-| `cage_net.stl` | flat, outer faces on the bed | 200 x 178 x 2.6 mm, fits a 220 mm bed. **Print it in PETG**: the 8 hinges are 0.6 mm films that PLA would crack. |
+| `cage_net.stl` | flat, outer faces on the bed | 200 x 178 x 3 mm, fits a 220 mm bed. **Print it in PETG**: the 8 hinges are 0.4 mm thin films (2 layers) that PLA would crack. |
 
 PLA or PETG, 0.2 mm layers, 15% infill is fine for the rest. Pick the colours you like: the original
 is a red tray, yellow wheel and light blue cage.
 
-**About the cage net.** It is only 2 mm thick, so it prints fast and uses little plastic. Slow the
+**About the cage net.** The panels are only 2 mm thick, so it prints fast and uses little plastic. Slow the
 first layers down a little. If you prefer PLA, set `HINGES = False` in `cad/params.py`: the walls
 then print as separate panels and you glue them to the roof (the mitred edges make that easy).
 
@@ -165,7 +165,7 @@ The script checks that every part is a closed mesh and that assembled parts do n
    groove holds every wall in place, which closes the corners without glue, and the small bump
    on each wall clicks into a dimple of the rim. Pull it straight up to take it off, and you can
    then lift the lid with the wheel to reach the ESP32. The lower outer wall of the rim guides
-   the walls in: start with the long sides.
+   the walls in: start with the long sides. The groove is 3 mm wide for 2 mm walls on purpose,\n   and its mouth is chamfered, because the folded cage is floppy and the corners are the hard\n   part: if it is still too tight, raise CAGE_FIT in cad/params.py.
 8. **Shavings.** Spread a few on the lid. This toy is a decoration: no real hamster inside.
 
 The USB-C cable goes through the left side of the tray. It powers the ESP32 and also lets you
@@ -239,6 +239,7 @@ release/    (not tracked) the merged firmware image is attached to GitHub Releas
   [build123d](https://github.com/gumyr/build123d) for the models.
 
 By DeadPohl, <https://www.instagram.com/_deadpohl_>
+
 
 
 
