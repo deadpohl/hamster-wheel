@@ -91,7 +91,7 @@ The STL files in [stl/](stl) are already in their print orientation. None needs 
 | `wheel_cover.stl` | roof of the cover on the bed | 40 x 21 x 24 mm |
 | `tray.stl` | floor on the bed | 90 x 68 x 16 mm |
 | `lid.stl` | top side up | 87 x 65 x 10 mm |
-| `cage_net.stl` | flat, outer faces on the bed | 200 x 178 x 3 mm, fits a 220 mm bed. **Print it in PETG**: the 8 hinges are 0.4 mm thin films (2 layers) that PLA would crack. |
+| `cage_net.stl` | flat, outer faces on the bed | 195 x 173 x 3 mm, fits a 220 mm bed. **Print it in PETG**: the 8 hinges are 0.4 mm thin films (2 layers) that PLA would crack. |
 
 PLA or PETG, 0.2 mm layers, 15% infill is fine for the rest. Pick the colours you like: the original
 is a red tray, yellow wheel and light blue cage.
@@ -99,6 +99,13 @@ is a red tray, yellow wheel and light blue cage.
 **About the cage net.** The panels are only 2 mm thick, so it prints fast and uses little plastic. Slow the
 first layers down a little. If you prefer PLA, set `HINGES = False` in `cad/params.py`: the walls
 then print as separate panels and you glue them to the roof (the mitred edges make that easy).
+
+The roof is a little **smaller** than the groove on purpose: when a wall is folded, the hinge bends into
+a small arc, so the wall ends up about 1.2 mm outside the edge of the roof. The dimensions of the net
+already take that into account (`FOLD_OFFSET` in `cad/params.py`, computed from the hinge). If your
+folded cage does not drop into the groove, measure how far the folded wall really sits outside the roof
+edge and put that value in `FOLD_OFFSET`. The cage has one horizontal bar on each side, at the height
+set by `BELT_POS`.
 
 ### Adjust the dimensions to your parts
 

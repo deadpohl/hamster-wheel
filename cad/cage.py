@@ -1,4 +1,4 @@
-﻿"""The cage: printed flat as one net, folded into a cage that plugs into the lid.
+"""The cage: printed flat as one net, folded into a cage that plugs into the lid.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
@@ -13,7 +13,7 @@ Panel frame (used for the flat net and for the folded cage):
   X = along the edge, Y = h, distance from the roof (0 at the top, HW at the skirt),
   Z = w, thickness from the OUTER face (0) to the inner face (CAGE_T).
 """
-from math import atan2, degrees, hypot, tan, radians
+from math import atan2, degrees, hypot, pi, radians, tan
 
 from build123d import Align, Cone, Location, Plane, Polygon, Pos, Rot, extrude
 
@@ -23,8 +23,14 @@ from parts import box, edges, fuse_all, outline, prism
 
 T = P.CAGE_T
 CAGE_TOP = K.WHEEL_Z + K.WHEEL_H + P.ROOF_GAP + T   # Z of the outer face of the roof
-HW = CAGE_TOP - K.TRAY_H                     # wall height: roof to the bottom of the skirt (groove floor)
 FILM = P.HINGE_FILM
+# When a wall is folded 90 degrees the film bends into a small arc: the outer face of the
+# wall ends up RHO outside the edge of the roof, and its top starts RHO below the roof.
+# So the roof is made RHO smaller than the groove outline, and the walls RHO shorter, so
+# that the bottom of the folded walls lands exactly in the groove of the lid.
+RHO = P.FOLD_OFFSET if P.FOLD_OFFSET is not None else 2 * P.HINGE_W / pi + FILM / 2
+ROOF_OFF = K.CAGE_OFF + RHO                  # roof outline: offset inward from the tray outline
+HW = CAGE_TOP - K.TRAY_H - RHO               # wall height: from the hinge to the groove floor
 
 
 def _fuse(shapes):
@@ -48,12 +54,12 @@ def _spread(half, pitch):
 
 # ----------------------------------------------------------------- roof
 def roof():
-    r_pts = outline(-K.CAGE_OFF)
+    r_pts = outline(-ROOF_OFF)
     # full thickness at the hinge film, then a 45 degree bevel on the inner face so
     # that the mitre closes when the wall is folded
     plate = prism(r_pts, 0, FILM) + Pos(0, 0, FILM) * extrude(
         Polygon(*r_pts[::-1], align=None), amount=T - FILM, taper=45)
-    win_pts = outline(-K.CAGE_OFF - P.RAIL_W)
+    win_pts = outline(-ROOF_OFF - P.RAIL_W)
     xs = [p[0] for p in win_pts]
     ys = [p[1] for p in win_pts]
     ax, ay = max(xs), max(ys)
@@ -66,7 +72,7 @@ def roof():
 
 
 # ----------------------------------------------------------- wall panel
-def wall_panel(length, front, beta_tan):
+def wall_panel(length, beta_tan):
     """One wall panel in the panel frame (see the module docstring)."""
     body = box(-length / 2, length / 2, 0, HW, 0, T)
 
@@ -76,8 +82,8 @@ def wall_panel(length, front, beta_tan):
         window = box(-iu, iu, P.RAIL_W, HW - P.RIM_H, -1, T + 1)
         bars = [box(u - P.BAR_W / 2, u + P.BAR_W / 2, P.RAIL_W - 0.5, HW - P.RIM_H + 0.5, -1, T + 1)
                 for u in _spread(iu, P.WALL_PITCH)]
-        if not front and length > 30:       # keep the front free: the wheel must be seen
-            hm = (P.RAIL_W + HW - P.RIM_H) / 2
+        if length > 30:                     # one horizontal bar on every side, at the same height
+            hm = P.RAIL_W + P.BELT_POS * (HW - P.RIM_H - P.RAIL_W)
             bars.append(box(-iu - 0.5, iu + 0.5, hm - P.BAR_W / 2, hm + P.BAR_W / 2, -1, T + 1))
         body -= window - _fuse(bars) if bars else window
 
@@ -109,12 +115,13 @@ def wall_panel(length, front, beta_tan):
 
 def _panels():
     """List of (panel, edge midpoint, tangent, outward normal, length)."""
-    pts = outline(-K.CAGE_OFF)
+    pts = outline(-ROOF_OFF)
     beta_tan = tan(radians(_vertex_angle(pts) / 2))
     out = []
     for (m, t, n, ln) in edges(pts):
-        front = abs(n[0]) < 0.01 and n[1] > 0.99       # becomes the front (-Y) once flipped
-        out.append((wall_panel(ln, front, beta_tan), m, t, n, ln))
+        # the folded walls stand RHO outside the roof edge, so each outer face is longer by
+        # RHO * tan(half the corner angle) at both ends: the corners still meet
+        out.append((wall_panel(ln + 2 * RHO * beta_tan, beta_tan), m, t, n, ln))
     return out
 
 
@@ -136,7 +143,7 @@ def folded():
     """The folded cage, in assembly coordinates (roof on top, walls hanging down)."""
     parts = [roof()]
     for panel, (mx, my), (tx, ty), (nx, ny), ln in _panels():
-        frame = Plane(origin=(mx, my, 0), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
+        frame = Plane(origin=(mx + RHO * nx, my + RHO * ny, RHO), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
         parts.append(Location(frame) * panel)
     return Pos(0, 0, CAGE_TOP) * (Rot(X=180) * _fuse(parts))
 

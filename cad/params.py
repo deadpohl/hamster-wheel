@@ -1,4 +1,4 @@
-﻿# Hamster wheel desk toy: all printable dimensions, in millimetres.
+# Hamster wheel desk toy: all printable dimensions, in millimetres.
 # Author: DeadPohl  https://www.instagram.com/_deadpohl_
 #
 # Edit the values below, then run `python build_all.py` to regenerate ../stl.
@@ -71,6 +71,7 @@ COVER_WALL = 2.0
 CAGE_T = 2.0            # thickness of every cage panel
 BAR_W = 1.6             # bar width
 WALL_PITCH = 11.0       # vertical bar spacing on the walls (large: you must see the wheel)
+BELT_POS = 0.5           # height of the horizontal bar, all around: 0 = right under the top rail, 1 = just above the skirt
 ROOF_PITCH = 14.0       # bar spacing on the roof
 POST_W = 4.0            # solid post at each vertical edge of a wall
 RAIL_W = 3.5            # solid top rail of the walls and border of the roof
@@ -81,6 +82,9 @@ ROOF_GAP = 3.0          # free space between the wheel top and the cage roof
 HINGES = True           # False: no hinge film, the panels print separately and you glue them
 HINGE_FILM = 0.4        # thickness of the living hinge (2 layers at 0.2 mm). PETG recommended
 HINGE_W = 1.6           # width of the hinge film (longer and thinner = less stress when folding)
+FOLD_OFFSET = None       # how far a folded wall stands outside the edge of the roof (the bend of the hinge).
+                        # None = computed from the hinge. If your folded cage does not drop into the groove,
+                        # measure the real offset and set it here: the roof is sized from it
 BUMP_R = 0.6            # snap bump on each wall (clicks into a dimple in the lid rim)
 DIMPLE_D = 0.6          # depth of that dimple
 
