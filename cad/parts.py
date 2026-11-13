@@ -1,4 +1,4 @@
-﻿"""Parametric parts of the hamster wheel desk toy (build123d): tray, lid, wheel, cap, cover.
+"""Parametric parts of the hamster wheel desk toy (build123d): tray, lid, wheel, cap, cover.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
@@ -9,8 +9,8 @@ build_all.py reorients each part for printing. The cage lives in cage.py.
 
 How the wiring is laid out (plain Dupont jumper wires, no soldering):
   * the ESP32 lies upside down in the front half of the tray, pins up, resting on its
-    module and USB-C socket. Its antenna slides under a bridge, the USB end clicks
-    under a flexible bar. The tray is deep enough for the Dupont connectors and the
+    module and USB-C socket. Its USB end slides under two fixed lips, a flexible bar
+    clicks over the antenna. The tray is deep enough for the Dupont connectors and the
     wires to stay inside;
   * the display connectors point straight back from the tab of the PCB, into a bay in
     the foot of the wheel. The wires go down through a hole in the lid, behind the
@@ -33,8 +33,8 @@ SEAT_Z = BOARD_TOP + P.DUPONT_H + P.WIRE_BEND     # underside of the lid
 TRAY_H = SEAT_Z + P.LID_T
 INNER_L = P.TRAY_L - 2 * P.WALL
 INNER_W = P.TRAY_W - 2 * P.WALL
-# USB end of the PCB (left): room for the USB-C socket nose and for the flexible bar
-BOARD_X0 = -INNER_L / 2 + max(2.7, P.USB_NOSE + 0.3)
+# USB end of the PCB (left): the USB-C socket nose ends just inside the wall
+BOARD_X0 = -INNER_L / 2 + max(1.4, P.USB_NOSE + 0.3)
 BOARD_X1 = BOARD_X0 + P.ESP_L                     # antenna end (right), the antenna sticks out further
 BOARD_YC = P.BOARD_Y
 ROW_DY = 12.7                                     # pin rows, from the board centre line (25.4 apart)
@@ -140,27 +140,36 @@ def tray():
         a, b = yc + s * (hw + 0.3), yc + s * (hw + 1.5)
         feats.append(box(x0 + 4, x1 - 4, min(a, b), max(a, b), fz, zt - 0.3))
 
-    # antenna end: a bridge over the antenna, the board slides under it
-    ah = P.ESP_ANT_W / 2 + 1.5                 # half width of the opening (modules are not always centred)
-    xa0, xa1 = x1 + 2.0, x1 + P.ESP_ANT_L + 0.8
-    roof_z = zb + 0.25                          # the antenna top is level with the PCB underside
-    feats.append(box(xa0, xa1 + 1.5, yc - ah - 2.0, yc + ah + 2.0, fz, roof_z + 1.6))
-
-    # USB end: a thin bar across the end of the board, held by a post at each end. It bends
-    # toward the wall when the board is pressed down, then its lip snaps over the PCB.
-    bx0, bx1 = x0 - 1.7, x0 - 0.7               # 1 mm thick, 1 mm free toward the wall
+    # USB end: two fixed lips over the PCB end, on both sides of the USB plug (the top of the
+    # PCB is free there, between the USB-C pins and the header plastic). The board slides under them.
     lip_z = zt + 0.2
-    bz1 = lip_z + 1.2
     for s in (-1, 1):
-        a, b = yc + s * 13.0, yc + s * (hw + 1.5)
+        a, b = yc + s * 6.6, yc + s * 10.8
+        feats.append(box(-INNER_L / 2 - 0.5, x0 - 0.2, min(a, b), max(a, b), fz, lip_z + 1.2))
+        feats.append(box(x0 - 0.3, x0 + 1.0, min(a, b), max(a, b), lip_z, lip_z + 1.2))
+
+    # antenna end: rigid stops against the PCB end, beside the antenna (plugging the USB cable
+    # pushes the board this way)
+    ah = P.ESP_ANT_W / 2 + 1.5                  # modules are not always centred on the board
+    for s in (-1, 1):
+        a, b = yc + s * ah, yc + s * (hw + 0.5)
+        feats.append(box(x1 + 0.2, x1 + 2.2, min(a, b), max(a, b), fz, zt - 0.4))
+
+    # then a thin bar across the antenna tip, held by a post at each end. It bends away when
+    # the board is pressed down, then its lip snaps over the antenna.
+    xt = x1 + P.ESP_ANT_L                       # antenna tip
+    bx0, bx1 = xt + 0.2, xt + 1.2               # 1 mm thick, free space behind it
+    alip_z = zb + 0.15                          # the antenna top is level with the PCB underside
+    bz1 = alip_z + 1.2
+    for s in (-1, 1):
+        a, b = yc + s * 12.5, yc + s * 15.0
         feats.append(box(bx0, bx1, min(a, b), max(a, b), fz, bz1))
-    feats.append(box(bx0, bx1, yc - 13.0, yc + 13.0, zb + 0.3, bz1))   # above the USB-C socket
-    lip = [(bx1 - 0.1, lip_z), (x0 + 0.6, lip_z), (x0 + 0.6, lip_z + 0.3), (bx1 - 0.1, bz1)]
+    feats.append(box(bx0, bx1, yc - 12.5, yc + 12.5, zb - 1.5, bz1))   # a bridge, free under it
+    lip = [(bx0 + 0.1, alip_z), (xt - 0.6, alip_z), (xt - 0.6, alip_z + 0.3), (bx0 + 0.1, bz1)]
     feats.append(Pos(0, yc, 0) * extrude(Plane.XZ * Polygon(*lip, align=None), amount=6.0, both=True))
 
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
     t += fuse_all(feats) & keep
-    t -= box(xa0 - 1, xa1, yc - ah, yc + ah, P.FLOOR, roof_z)          # the opening under the bridge
     # pockets under the EN and BOOT buttons, so they can never be pressed by the floor
     for s in (-1, 1):
         a, b = yc + s * 5.0, yc + s * 11.5
@@ -236,9 +245,10 @@ def wheel():
         P.WHEEL_WINDOW_D / 2 + P.WHEEL_FLARE, P.WHEEL_WINDOW_D / 2, P.WHEEL_FLARE, align=CEN))
     body -= cyl_y(P.LCD_GLASS_D + 2 * P.FIT, Y_GLASS, Y_PCB + 0.01, z=H_CENTER)
     body -= cyl_y(P.LCD_PCB_D + 2 * P.FIT, Y_PCB, WHEEL_DEPTH + 1, z=H_CENTER)
-    # the tab at the bottom of the display PCB (1 mm deeper at the front for the parts on it)
+    # the tab at the bottom of the display PCB (1 mm deeper at the front for the parts on it),
+    # open down to the bottom of the foot: no thin ledge under it
     tw = P.LCD_TAB_W / 2 + P.FIT
-    body -= box(-tw, tw, Y_PCB - 1.0, WHEEL_DEPTH + 1, TAB_BOT - 0.5, H_CENTER)
+    body -= box(-tw, tw, Y_PCB - 1.0, WHEEL_DEPTH + 1, -1, H_CENTER)
     # bay behind the PCB: the Dupont connectors point straight back, the wires go down
     body -= box(-P.BAY_W / 2, P.BAY_W / 2, Y_BACK, WHEEL_DEPTH + 1, -1, BAY_TOP)
     if P.CAP_SCREWS:

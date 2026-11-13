@@ -103,8 +103,9 @@ The script checks that every part is a closed mesh and that the assembled parts 
 
 - **ESP32:** it lies upside down in the front half of the tray, resting on its module and USB-C
   socket (pockets under the EN and BOOT buttons keep them free). The long edges cannot be clamped,
-  the header plastic covers them, so it is held at both ends: the antenna slides under a bridge,
-  and a thin bar across the USB end bends toward the wall and snaps over the PCB. The tray is deep
+  the header plastic covers them, so it is held at both ends: the USB end slides under two fixed
+  lips (on both sides of the plug), rigid stops beside the antenna take the push of the USB cable,
+  and a thin bar across the antenna tip bends away and snaps over the antenna. The tray is deep
   enough for the Dupont connectors and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
 - **Display:** a disc with a tab at the bottom. The header pins point straight back from the tab,
   so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires go down

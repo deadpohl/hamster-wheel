@@ -180,9 +180,10 @@ in place. Feed the 7 free ends of the wires down through the hole behind the whe
   faces **down**.
 - The **USB plug** end goes to the **left wall**, where the opening is, and the antenna (the short
   black tongue at the other end) points to the right.
-- Hold the board tilted, slide the antenna under the **little bridge** on the right, then lower the
-  USB end: press it down until the **thin bar** near the left wall clicks over the edge of the board.
-- To take it out later, push that bar toward the wall with a fingernail and lift the USB end.
+- Hold the board tilted, slide the USB end under the **two small lips** next to the USB opening,
+  then lower the antenna end: press it down until the **thin bar** on the right clicks over the
+  antenna.
+- To take it out later, pull that bar to the right with a fingernail and lift the antenna end.
 
 **5. Connect and close.** Plug the 7 wires coming from the lid onto the ESP32 pins (table above).
 The plugs stand up, the wires curl inside the tray: there is room for them. Lower the **lid** onto
