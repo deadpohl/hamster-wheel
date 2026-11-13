@@ -86,7 +86,7 @@ do not work for this).
 >   a *CH340* needs the "CH340 driver" (search for it).
 > - **Linux:** your user may need to be in the `dialout` group.
 > - **Still failing:** hold the small **BOOT** button on the board while you click *Connect*, and
->   let go when it says *Connecting...* is done.
+>   let go once the page shows that it is connected.
 
 ### 2b. Plug the screen
 
