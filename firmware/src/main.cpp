@@ -54,7 +54,8 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
 
   TJpgDec.setJpgScale(1);
-  TJpgDec.setSwapBytes(true);
+  // No TJpgDec.setSwapBytes() here: TFT_eSPI already swaps the bytes (tft.setSwapBytes above),
+  // doing it twice scrambles the colours.
   TJpgDec.setCallback(pushBlock);
 
   Header h;
