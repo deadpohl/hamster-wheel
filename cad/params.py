@@ -9,32 +9,37 @@
 
 # ---------------------------------------------------------------- display
 # GC9A01 1.28" round module, 7 pin version (VCC GND SCL SDA DC CS RST).
-# Its header pins stick out of the BACK of the PCB, so the Dupont connectors point
-# straight backwards: the wheel has a bay behind the PCB for them.
-LCD_PCB_D = 38.0        # measure me: outer diameter of the round PCB
+# The PCB is a disc with a tab at the bottom that carries the pins. The pins stick out
+# of the BACK of the tab, so the Dupont connectors point straight backwards: the wheel
+# has a bay behind the PCB for them, the wires then go down into the tray.
+LCD_PCB_D = 38.0        # measure me: diameter of the round part of the PCB
+LCD_H_TOTAL = 45.5      # measure me: from the top of the disc to the bottom edge of the tab
+LCD_TAB_W = 30.0        # measure me: width of the tab (the pocket is cut this wide, a bit more is fine)
 LCD_GLASS_D = 35.6      # measure me: diameter of the glass on top of the PCB
 LCD_ACTIVE_D = 32.4     # visible picture diameter (datasheet value)
 LCD_PCB_T = 1.6         # measure me: PCB thickness
 LCD_GLASS_T = 1.8       # measure me: glass height above the PCB
 LCD_REAR_SPACE = 6.0    # room behind the PCB inside the ring
 LCD_CONN_LEN = 16.5     # measure me: Dupont housing + header plastic, behind the PCB
-LCD_PIN_Z = 2.7         # measure me: height of the pin row above the bottom edge of the PCB
-BAY_W = 36.0            # width of the wire bay behind the display (and of the slot in the lid)
-BAY_L = 26.0            # length of that bay, from the back of the PCB
+LCD_PIN_Z = 2.5         # measure me: height of the pin row above the bottom edge of the tab
+BAY_W = 36.0            # width of the wire bay behind the display
+WIRE_BEND_LCD = 6.0     # room behind the display connectors for the wires to bend down
 
 # ------------------------------------------------------------------ ESP32
-# 38 pin DevKit style board. It lies UPSIDE DOWN on the floor of the tray: pins up,
-# so the Dupont connectors plug in from above and go straight up through the lid.
-ESP_L = 55.0            # measure me: board length (48 to 55 depending on the clone)
-ESP_W = 28.5            # measure me: board width (25 to 29 depending on the clone)
+# 38 pin DevKit style board. It lies UPSIDE DOWN in the tray: pins up, resting on its
+# module and USB-C socket. The antenna end slides under a bridge, the USB end clicks
+# under a flexible bar. The Dupont connectors and their wires stay inside the tray.
+ESP_L = 47.0            # measure me: PCB length, WITHOUT the antenna
+ESP_W = 28.0            # measure me: PCB width
+ESP_ANT_L = 6.0         # measure me: how far the antenna sticks out past the end of the PCB
+ESP_ANT_W = 18.0        # measure me: width of that antenna
 ESP_PCB_T = 1.6
-ESP_UNDER_H = 4.5       # measure me: tallest part under the board (module, USB-C, buttons)
-ESP_HDR_H = 2.5         # height of the black plastic of the pin headers
-DUPONT_H = 17.0         # measure me: Dupont connector height above the PCB (header + housing)
-USB_HOLE_W = 11.5       # opening for the USB-C plug body (plug is about 10.5 wide)
-USB_HOLE_H = 7.0        # opening height (plug is about 6.5 high)
-USB_AXIS_BELOW_PCB = 1.7  # the USB-C port is under the PCB, its axis this far below it
-CLEAR_ABOVE = 1.5       # free height between the header plastic and the lid
+ESP_UNDER_H = 3.2       # measure me: board pins up on the table, height from the table to the UNDERSIDE of the PCB
+ESP_HDR_H = 3.0         # height of the black plastic of the pin headers
+DUPONT_H = 15.0         # measure me: top of a plugged Dupont connector above the PCB
+WIRE_BEND = 8.0         # room above the Dupont connectors for the wires to bend
+USB_NOSE = 2.4          # measure me: how far the USB-C socket sticks out past the end of the PCB
+USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a big moulded end)
 
 # ------------------------------------------------------------------- tray
 TRAY_L = 90.0           # outer size along X
@@ -42,7 +47,8 @@ TRAY_W = 68.0           # outer size along Y, front to back (room for the wheel 
 CORNER_CUT = 8.0        # 45 degree chamfer on the four vertical corners (0 = square corners)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
-BOARD_Y = 7.0           # ESP32 position along Y (positive = toward the back)
+BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front, the wires leave at the back)
+WHEEL_X = 0.0           # wheel position along X (0 = centred)
 
 # -------------------------------------------------------------------- lid
 LID_T = 3.0             # lid plate thickness (also the depth of the seat in the tray)
@@ -62,7 +68,7 @@ FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
 CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
 CAP_PRESS = 0.15        # radial clearance of the cap plug in the PCB pocket
-COVER_H = 22.0          # inner height of the cover over the Dupont connectors
+COVER_H = 14.0          # inner height of the cover over the display connectors
 COVER_WALL = 2.0
 
 # ------------------------------------------------------------------- cage

@@ -72,14 +72,17 @@ yours with callipers and edit the lines tagged `measure me` in [`cad/params.py`]
 
 | Value | What to measure |
 |---|---|
-| `LCD_PCB_D` | outer diameter of the round display PCB |
+| `LCD_PCB_D` | diameter of the round part of the display PCB |
+| `LCD_H_TOTAL`, `LCD_TAB_W` | display PCB height from the top of the disc to the bottom of the tab, and tab width |
 | `LCD_GLASS_D` | diameter of the glass on top of it |
 | `LCD_PCB_T`, `LCD_GLASS_T` | PCB thickness, glass height |
-| `ESP_L`, `ESP_W` | board length and width |
-| `ESP_UNDER_H` | the tallest part under the ESP32 (module, USB-C, buttons): it hangs below the board, between the posts |
+| `ESP_L`, `ESP_W` | PCB length (without the antenna) and width |
+| `ESP_ANT_L`, `ESP_ANT_W` | how far the antenna sticks out past the PCB, and its width |
+| `ESP_UNDER_H` | board pins up on the table: height from the table to the underside of the PCB |
 | `ESP_HDR_H`, `DUPONT_H` | height of the header plastic, and of a Dupont connector plugged on a pin |
-| `LCD_CONN_LEN`, `LCD_PIN_Z` | how far the display connectors stick out behind the PCB, and the height of the pin row above the PCB edge |
-| `USB_HOLE_W`, `USB_HOLE_H` | size of your USB-C plug body (some cables have a big moulded end) |
+| `USB_NOSE` | how far the USB-C socket sticks out past the end of the PCB |
+| `LCD_CONN_LEN`, `LCD_PIN_Z` | how far the display connectors stick out behind the PCB, and the height of the pin row above the bottom of the tab |
+| `USB_HOLE_W` | width of your USB-C plug body (some cables have a big moulded end) |
 
 The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint), `CORNER_CUT` (the chamfered
 corners, 0 for square ones), `WALL_PITCH` (gap between the cage bars), `BELT_POS` (height of the
@@ -98,12 +101,15 @@ The script checks that every part is a closed mesh and that the assembled parts 
 
 ### How the parts work together
 
-- **ESP32:** it lies upside down on four posts under its corners, four snap hooks clamp its edges.
-  The Dupont connectors plug in from above and poke up through a big slot in the lid. The tray is
-  only as high as the board plus its header plastic.
-- **Display:** its header pins point straight back from the PCB, so the connectors need about
-  16.5 mm behind it: the wheel has a bay for them, and a cover hides the bay and the lid slot.
-  The cap has a U shaped notch for the connectors.
+- **ESP32:** it lies upside down in the front half of the tray, resting on its module and USB-C
+  socket (pockets under the EN and BOOT buttons keep them free). The long edges cannot be clamped,
+  the header plastic covers them, so it is held at both ends: the antenna slides under a bridge,
+  and a thin bar across the USB end bends toward the wall and snaps over the PCB. The tray is deep
+  enough for the Dupont connectors and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
+- **Display:** a disc with a tab at the bottom. The header pins point straight back from the tab,
+  so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires go down
+  through a hole in the lid, behind the ESP32, and a cover hides the bay. The cap has a U shaped
+  notch for the connectors.
 - **Cage:** one flat net (roof in the middle, 8 walls around, joined by living hinges) that folds
   and plugs into a groove all around the rim of the lid. The roof is a little **smaller** than the
   groove on purpose: when a wall is folded, the hinge bends into a small arc, so the wall ends up

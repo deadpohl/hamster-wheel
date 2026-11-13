@@ -129,15 +129,15 @@ printing: **do not rotate them**, and you do not need supports.
 |---|---|---|---|---|
 | 1 | `wheel.stl` | The wheel (holds the screen) | 50 x 53 x 15 | PLA or PETG |
 | 2 | `wheel_cap.stl` | Closes the back of the wheel | 48 x 44 x 8 | PLA or PETG |
-| 3 | `wheel_cover.stl` | Hides the wires behind the wheel | 40 x 21 x 24 | PLA or PETG |
-| 4 | `tray.stl` | The red box that holds the ESP32 | 90 x 68 x 16 | PLA or PETG |
+| 3 | `wheel_cover.stl` | Hides the wires behind the wheel | 40 x 17 x 16 | PLA or PETG |
+| 4 | `tray.stl` | The red box that holds the ESP32 | 90 x 68 x 33 | PLA or PETG |
 | 5 | `lid.stl` | The lid, the floor of the cage | 87 x 65 x 10 | PLA or PETG |
 | 6 | `cage_net.stl` | The cage, printed **flat** | 195 x 173 x 3 | PETG (best) or PLA |
 
 Settings that work: layer height **0.2 mm**, infill **15 %**, **no supports**, 0.4 mm nozzle.
 
-**Print the wheel first** (a short print). Check that the round screen board drops into it, with the
-glass facing the front. If it does not, **stop here** and open an Issue with the measurements of
+**Print the wheel first** (a short print). Check that the screen board (the round part and the tab with the pins)
+drops into it from the back, with the glass facing the front. If it does not, **stop here** and open an Issue with the measurements of
 your screen, before printing the rest. Makers can also adjust the model themselves
 ([details](docs/advanced.md#adjust-the-dimensions-to-your-parts)).
 
@@ -160,8 +160,8 @@ a drop of super glue repairs it.
   <img src="docs/img/wheel_exploded.jpg" width="50%" alt="The wheel, screen, cap and cover">
 </p>
 
-**1. Put the screen in the wheel.** Push the round screen into the wheel from the **back**, glass
-first, with the row of pins at the **bottom**. Plug the 7 jumper wires onto the screen's pins
+**1. Put the screen in the wheel.** Push the screen into the wheel from the **back**, glass first,
+with the tab and its row of pins at the **bottom**. Plug the 7 jumper wires onto the screen's pins
 (use the same wires you tested with, the other end stays free for now). The sockets point straight
 backwards, into the space behind the wheel: that is normal.
 
@@ -169,24 +169,24 @@ backwards, into the space behind the wheel: that is normal.
 the wires through. Lock it with the 2 small screws, or a drop of glue. If the screen rattles, a
 small piece of foam tape between the screen and the cap fixes it.
 
-**3. Put the ESP32 in the tray.** This is the unusual part: the board goes in **upside down**.
+**3. Put the wheel on the lid.** Set the wheel's foot in its seat on the lid. A drop of glue keeps it
+in place. Feed the 7 free ends of the wires down through the hole behind the wheel, one by one.
+
+**4. Put the ESP32 in the tray.** This is the unusual part: the board goes in **upside down**.
 
 <p align="center"><img src="docs/img/tray_inside.jpg" width="48%" alt="The ESP32 upside down in the tray"></p>
 
 - The side with the **black plastic strips and the metal pins** faces **up**. The silver WiFi module
   faces **down**.
-- The **USB plug** end goes against the **left wall**, where the opening is.
-- Press the board straight down onto the 4 small posts until the **4 hooks click** over its edges.
-  Do not force: push on the edges, evenly.
-- Plug the other end of the 7 jumper wires onto the ESP32 pins (table above). The sockets stand up
-  and the wires go straight up.
+- The **USB plug** end goes to the **left wall**, where the opening is, and the antenna (the short
+  black tongue at the other end) points to the right.
+- Hold the board tilted, slide the antenna under the **little bridge** on the right, then lower the
+  USB end: press it down until the **thin bar** near the left wall clicks over the edge of the board.
+- To take it out later, push that bar toward the wall with a fingernail and lift the USB end.
 
-**4. Close the tray.** Lower the **lid** onto the tray: the plugs and wires come up through the big
-slot in the lid.
-
-**5. Put the wheel on the lid.** Set the wheel's foot in its seat, over the slot. A drop of glue keeps
-it in place. Then slide the **cover** over the plugs and wires to hide them.
-
+**5. Connect and close.** Plug the 7 wires coming from the lid onto the ESP32 pins (table above).
+The plugs stand up, the wires curl inside the tray: there is room for them. Lower the **lid** onto
+the tray, then slide the **cover** over the back of the wheel to hide the wires.
 **6. Check again.** Plug the USB cable: the hamster must run. (If not, a wire came loose during
 assembly.)
 
@@ -219,8 +219,8 @@ also how you can change the program later without opening anything.
 | The picture is turned or mirrored | Tell me (open an Issue) which way it is turned: it is a one-line change in the program. |
 | The colours look wrong | Make sure you flashed the **latest** `hamster-wheel-esp32.bin` from the Releases page. |
 | The screen does not fit in the wheel | Stop printing and open an Issue with the measurements of your screen. |
-| A cable plug does not fit the tray opening | The opening is 11.5 x 7 mm. A cable with a smaller moulded plug is needed. |
-| The ESP32 does not fit on the posts | Boards differ by a few millimetres between sellers: open an Issue with its length and width. |
+| A cable plug does not fit the tray opening | The opening is 12.5 mm wide. A cable with a smaller moulded plug is needed. |
+| The ESP32 does not fit in the tray | Boards differ by a few millimetres between sellers: open an Issue with its length and width, and how far the antenna sticks out. |
 | The cage is hard to push into the groove | Start with the two long sides, let the walls spring into place, and press the corners last. |
 
 ---
