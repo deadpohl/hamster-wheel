@@ -80,7 +80,7 @@ CAGE_FIT = 0.5          # clearance on each side of the skirt in the groove (the
 LEAD_IN = 0.6           # chamfer that guides the walls into the groove (mouth of the groove, skirt edge)
 ROOF_GAP = 3.0          # free space between the wheel top and the cage roof
 HINGES = True           # False: no hinge film, the panels print separately and you glue them
-HINGE_FILM = 0.4        # thickness of the living hinge (2 layers at 0.2 mm). PETG recommended
+HINGE_FILM = 0.4        # thickness of the living hinge (2 layers at 0.2 mm). PETG is the safest, PLA held in a first test
 HINGE_W = 1.6           # width of the hinge film (longer and thinner = less stress when folding)
 FOLD_OFFSET = None       # how far a folded wall stands outside the edge of the roof (the bend of the hinge).
                         # None = computed from the hinge. If your folded cage does not drop into the groove,

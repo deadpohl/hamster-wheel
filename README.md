@@ -30,7 +30,7 @@ the code and the 3D model generator are all here too: see [For makers](#for-make
 
 ## 1. Shopping list
 
-You need **a 3D printer** (bed of at least 220 x 220 mm, able to print PETG), **a computer**
+You need **a 3D printer** (bed of at least 220 x 220 mm), **a computer**
 with the Chrome or Edge browser, and the parts below. Roughly 15 to 25 euros of electronics and
 about 100 g of filament. Prices change, these are only orders of magnitude.
 
@@ -48,7 +48,7 @@ about 100 g of filament. Prices change, these are only orders of magnitude.
 |---|---|
 | **USB cable** | Must carry **data**, not only charge (some cheap cables only charge). The plug on the ESP32 board's side must match the board (USB-C or micro-USB). The big moulded plugs of some cables may not fit the opening: it is 11.5 x 7 mm. |
 | **USB power** | Any phone charger (5 V) or a USB port of a computer. |
-| **Filament** | About 100 g in total. **The cage must be PETG** (it folds on thin hinges that PLA would crack). The other parts can be PLA or PETG. Colours are free: the original is a red tray, yellow wheel and light blue cage. |
+| **Filament** | About 100 g in total. PLA or PETG for every part. For the cage, **PETG is the safest** (it folds on thin hinges), but PLA works too if you follow the tip in step 2. Colours are free: the original is a red tray, yellow wheel and light blue cage. |
 | **Wood shavings** | A pinch. The shavings from a pencil sharpener are perfect. |
 | **Slicer** | The free program that prepares a 3D file for your printer (PrusaSlicer, OrcaSlicer, Bambu Studio, Cura...). |
 
@@ -132,7 +132,7 @@ printing: **do not rotate them**, and you do not need supports.
 | 3 | `wheel_cover.stl` | Hides the wires behind the wheel | 40 x 21 x 24 | PLA or PETG |
 | 4 | `tray.stl` | The red box that holds the ESP32 | 90 x 68 x 16 | PLA or PETG |
 | 5 | `lid.stl` | The lid, the floor of the cage | 87 x 65 x 10 | PLA or PETG |
-| 6 | `cage_net.stl` | The cage, printed **flat** | 195 x 173 x 3 | **PETG** |
+| 6 | `cage_net.stl` | The cage, printed **flat** | 195 x 173 x 3 | PETG (best) or PLA |
 
 Settings that work: layer height **0.2 mm**, infill **15 %**, **no supports**, 0.4 mm nozzle.
 
@@ -142,8 +142,12 @@ your screen, before printing the rest. Makers can also adjust the model themselv
 ([details](docs/advanced.md#adjust-the-dimensions-to-your-parts)).
 
 **About the cage.** It is a flat sheet of bars: a roof in the middle and 8 walls around it, linked by
-very thin hinges (0.4 mm). Print it slowly (a slow first layer, a clean and well levelled bed), in PETG.
+very thin hinges (0.4 mm). Print it slowly (a slow first layer, a clean and well levelled bed).
 You fold it afterwards, it is not glued.
+
+*PLA tip:* the hinges held in PLA in a first test. To be safe, warm each hinge for a few seconds
+with a hair dryer before folding, and fold each wall slowly, **once**. If a hinge breaks anyway,
+a drop of super glue repairs it.
 
 <p align="center"><img src="docs/img/cage_net.jpg" width="55%" alt="The cage as printed, flat"></p>
 
