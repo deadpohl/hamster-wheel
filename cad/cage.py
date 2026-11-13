@@ -82,7 +82,7 @@ def wall_panel(length, front, beta_tan):
         body -= window - _fuse(bars) if bars else window
 
     # snap bump on the inner face of the skirt (fits the groove in the tray wall)
-    if length > 8:
+    if length > 10:                          # same rule as the dimples of the lid
         body += Pos(0, HW - 2.5, T - 0.1) * Cone(P.BUMP_R + 0.2, P.BUMP_R - 0.2, P.BUMP_R + 0.1,
                                                     align=(Align.CENTER, Align.CENTER, Align.MIN))
 
@@ -133,5 +133,6 @@ def folded():
         frame = Plane(origin=(mx, my, 0), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
         parts.append(Location(frame) * panel)
     return Pos(0, 0, CAGE_TOP) * (Rot(X=180) * _fuse(parts))
+
 
 

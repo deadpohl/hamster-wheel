@@ -4,36 +4,45 @@
 # Edit the values below, then run `python build_all.py` to regenerate ../stl.
 # The defaults are best guesses from datasheets. Measure YOUR display and YOUR
 # ESP32 board with calipers and adjust the "measure me" values first.
+#
+# Wiring uses ordinary female-female Dupont jumper wires on both ends, no soldering.
 
 # ---------------------------------------------------------------- display
-# GC9A01 1.28" round module, 7 pin version (VCC GND SCL SDA DC CS RST)
+# GC9A01 1.28" round module, 7 pin version (VCC GND SCL SDA DC CS RST).
+# Its header pins stick out of the BACK of the PCB, so the Dupont connectors point
+# straight backwards: the wheel has a bay behind the PCB for them.
 LCD_PCB_D = 38.0        # measure me: outer diameter of the round PCB
 LCD_GLASS_D = 35.6      # measure me: diameter of the glass on top of the PCB
 LCD_ACTIVE_D = 32.4     # visible picture diameter (datasheet value)
 LCD_PCB_T = 1.6         # measure me: PCB thickness
 LCD_GLASS_T = 1.8       # measure me: glass height above the PCB
-LCD_REAR_SPACE = 6.0    # room behind the PCB for header pins and soldered wires
-LCD_PIN_SLOT_W = 20.0   # width of the notch for the 7 pin header (17.8 mm + margin)
+LCD_REAR_SPACE = 6.0    # room behind the PCB inside the ring
+LCD_CONN_LEN = 16.5     # measure me: Dupont housing + header plastic, behind the PCB
+LCD_PIN_Z = 2.7         # measure me: height of the pin row above the bottom edge of the PCB
+BAY_W = 36.0            # width of the wire bay behind the display (and of the slot in the lid)
+BAY_L = 26.0            # length of that bay, from the back of the PCB
 
 # ------------------------------------------------------------------ ESP32
-# 38 pin DevKit style board, USB-C at one short end
+# 38 pin DevKit style board. It lies UPSIDE DOWN on the floor of the tray: pins up,
+# so the Dupont connectors plug in from above and go straight up through the lid.
 ESP_L = 55.0            # measure me: board length (48 to 55 depending on the clone)
 ESP_W = 28.5            # measure me: board width (25 to 29 depending on the clone)
 ESP_PCB_T = 1.6
-ESP_PIN_LEN = 11.0      # measure me: how far the header pins stick out below the PCB
-ESP_TOP_H = 4.0         # tallest part on top of the PCB (USB-C, buttons, module)
+ESP_UNDER_H = 4.5       # measure me: tallest part under the board (module, USB-C, buttons)
+ESP_HDR_H = 2.5         # height of the black plastic of the pin headers
+DUPONT_H = 17.0         # measure me: Dupont connector height above the PCB (header + housing)
 USB_HOLE_W = 11.5       # opening for the USB-C plug body (plug is about 10.5 wide)
 USB_HOLE_H = 7.0        # opening height (plug is about 6.5 high)
-USB_AXIS_ABOVE_PCB = 1.7  # height of the USB-C port axis above the PCB top
+USB_AXIS_BELOW_PCB = 1.7  # the USB-C port is under the PCB, its axis this far below it
+CLEAR_ABOVE = 1.5       # free height between the header plastic and the lid
 
 # ------------------------------------------------------------------- tray
-TRAY_L = 94.0           # outer size along X (the wheel stands right above the ESP32)
-TRAY_W = 60.0           # outer size along Y, front to back (room for the shavings)
-CORNER_CUT = 10.0       # 45 degree chamfer on the four vertical corners (0 = square corners)
+TRAY_L = 90.0           # outer size along X
+TRAY_W = 68.0           # outer size along Y, front to back (room for the wheel bay and shavings)
+CORNER_CUT = 8.0        # 45 degree chamfer on the four vertical corners (0 = square corners)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
-WIRE_ROOM = 4.0         # free height between the ESP32 and the lid for wires
-BOARD_Y = 4.0           # ESP32 position along Y (positive = toward the back, under the wire slot)
+BOARD_Y = 7.0           # ESP32 position along Y (positive = toward the back)
 
 # -------------------------------------------------------------------- lid
 LID_T = 3.0             # lid plate thickness (also the depth of the seat in the tray)
@@ -47,14 +56,14 @@ WHEEL_D = 48.0          # outer diameter of the wheel housing
 WHEEL_TUBE = 6.0        # depth of the "tunnel" in front of the screen
 WHEEL_WINDOW_D = LCD_ACTIVE_D + 1.0
 WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the picture
-FOOT_H = 6.0            # height of the foot below the ring
+FOOT_H = 5.0            # height of the foot below the ring
 FOOT_W = 50.0
-WHEEL_X = 10.0          # wheel position on the lid (X)
-WHEEL_Y = 4.0           # wheel front face position on the lid (Y, negative = toward viewer)
 FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
 CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
 CAP_PRESS = 0.15        # radial clearance of the cap plug in the PCB pocket
+COVER_H = 22.0          # inner height of the cover over the Dupont connectors
+COVER_WALL = 2.0
 
 # ------------------------------------------------------------------- cage
 # Printed flat as one "net": the roof in the middle and one wall around each of
@@ -73,4 +82,3 @@ HINGE_FILM = 0.6        # thickness of the living hinge (3 layers at 0.2 mm). PE
 HINGE_W = 1.2           # width of the hinge film
 BUMP_R = 0.6            # snap bump on each wall (clicks into a dimple in the lid rim)
 DIMPLE_D = 0.5          # depth of that dimple
-
