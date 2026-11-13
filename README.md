@@ -1,4 +1,4 @@
-﻿<!-- Hamster wheel desk toy -- by DeadPohl (https://www.instagram.com/_deadpohl_) -->
+<!-- Hamster wheel desk toy -- by DeadPohl (https://www.instagram.com/_deadpohl_) -->
 <!-- SPDX-License-Identifier: CC-BY-NC-SA-4.0 -->
 # Hamster wheel desk toy
 
@@ -165,7 +165,9 @@ The script checks that every part is a closed mesh and that assembled parts do n
    groove holds every wall in place, which closes the corners without glue, and the small bump
    on each wall clicks into a dimple of the rim. Pull it straight up to take it off, and you can
    then lift the lid with the wheel to reach the ESP32. The lower outer wall of the rim guides
-   the walls in: start with the long sides. The groove is 3 mm wide for 2 mm walls on purpose,\n   and its mouth is chamfered, because the folded cage is floppy and the corners are the hard\n   part: if it is still too tight, raise CAGE_FIT in cad/params.py.
+   the walls in: start with the long sides. The groove is 3 mm wide for 2 mm walls on purpose,
+   and its mouth is chamfered, because the folded cage is floppy and the corners are the hard
+   part: if it is still too tight, raise `CAGE_FIT` in `cad/params.py`.
 8. **Shavings.** Spread a few on the lid. This toy is a decoration: no real hamster inside.
 
 The USB-C cable goes through the left side of the tray. It powers the ESP32 and also lets you
