@@ -102,15 +102,19 @@ The script checks that every part is a closed mesh and that the assembled parts 
 ### How the parts work together
 
 - **ESP32:** it lies upside down in the front half of the tray, resting on its module and USB-C
-  socket (pockets under the EN and BOOT buttons keep them free). The long edges cannot be clamped,
-  the header plastic covers them, so it is held at both ends: the USB end slides under two fixed
-  lips (on both sides of the plug), rigid stops beside the antenna take the push of the USB cable,
-  and a thin bar across the antenna tip bends away and snaps over the antenna. The tray is deep
-  enough for the Dupont connectors and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
-- **Display:** a disc with a tab at the bottom. The header pins point straight back from the tab,
-  so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires go down
-  through a hole in the lid, behind the ESP32, and a cover hides the bay. The cap has a U shaped
-  notch for the connectors.
+  socket (pockets under the EN and BOOT buttons keep them free). It drops into a pocket: low walls
+  along the long edges, two posts at the USB end, two stops beside the antenna, `ESP_GAP` of
+  clearance all around. There are no clips on purpose: the header plastic covers the long edges,
+  and two snap designs failed in test prints (fragile, hard to insert). The pocket is enough for
+  the USB cable, since pushing or pulling the plug presses the board down, never up. Double-sided
+  foam tape under the module is the optional permanent hold. The tray is deep enough for the
+  Dupont connectors and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
+- **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
+  glass seat and is open down to the bottom of the foot. The header pins point straight back from
+  the tab, so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires
+  go down through a hole in the lid, behind the ESP32, and a cover hides the bay. The cap is cut
+  flat at the top of the cover (`COVER_H` + `COVER_WALL`): the bottom stays open for the tab, and
+  the cap rests on the cover and holds it down.
 - **Cage:** one flat net (roof in the middle, 8 walls around, joined by living hinges) that folds
   and plugs into a groove all around the rim of the lid. The roof is a little **smaller** than the
   groove on purpose: when a wall is folded, the hinge bends into a small arc, so the wall ends up

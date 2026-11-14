@@ -9,12 +9,11 @@ build_all.py reorients each part for printing. The cage lives in cage.py.
 
 How the wiring is laid out (plain Dupont jumper wires, no soldering):
   * the ESP32 lies upside down in the front half of the tray, pins up, resting on its
-    module and USB-C socket. Its USB end slides under two fixed lips, a flexible bar
-    clicks over the antenna. The tray is deep enough for the Dupont connectors and the
-    wires to stay inside;
+    module and USB-C socket. It drops into a pocket, no clips. The tray is deep enough
+    for the Dupont connectors and the wires to stay inside;
   * the display connectors point straight back from the tab of the PCB, into a bay in
     the foot of the wheel. The wires go down through a hole in the lid, behind the
-    ESP32, and a cover hides the bay.
+    ESP32. A cover hides the bay, the cap is cut flat at the bottom and rests on it.
 """
 from math import hypot
 
@@ -53,8 +52,11 @@ if TAB_BOT < 1.5:
 POCKET_D = 1.2                                    # depth of the foot seat in the lid
 WHEEL_Z = TRAY_H - POCKET_D                       # assembly Z of the foot base
 BAY_TOP = PIN_Z + 1.27 + 3.0                      # height of the bay in the foot
-COVER_Y0 = WHEEL_DEPTH + P.CAP_T
+COVER_Y0 = WHEEL_DEPTH                            # the cover goes under the cap, against the wheel
 COVER_Y1 = Y_BACK + P.LCD_CONN_LEN + P.WIRE_BEND_LCD
+COVER_TOP = P.COVER_H + P.COVER_WALL              # the flat bottom of the cap rests on it
+if P.COVER_H < BAY_TOP:
+    raise ValueError("COVER_H is lower than the display connectors: increase it")
 COVER_HW = P.BAY_W / 2 + P.COVER_WALL             # half width of the cover (outside)
 WHEEL_X = P.WHEEL_X
 
@@ -128,45 +130,34 @@ def tray():
     # seat for the lid: the opening widens by SEAT_W in the top LID_T millimetres
     t -= prism(outline(-(P.WALL - P.SEAT_W)), SEAT_Z, TRAY_H + 1)
 
-    # ESP32 upside down, resting on its module and USB-C socket. Nothing clamps the long
-    # edges: the header plastic covers them. It is held at both ends instead.
+    # ESP32 upside down, resting on its module and USB-C socket. It simply drops into a pocket:
+    # nothing flexes, nothing clips (the header plastic covers the long edges, so there is
+    # nothing to clip on anyway). The pocket stops it in X and Y, which is all the USB cable
+    # needs: pushing or pulling the plug presses the board down, never up. A square of
+    # double-sided foam tape under the module holds it for good if wanted.
     yc, x0, x1 = BOARD_YC, BOARD_X0, BOARD_X1
     hw = P.ESP_W / 2
-    zb, zt = BOARD_BOT, BOARD_TOP
+    zt = BOARD_TOP
     fz = P.FLOOR - 0.1
+    g = P.ESP_GAP
     feats = []
-    # side guides just outside the long edges, lower than the PCB top
+    # long walls beside the PCB and the header plastic, with a lead-in chamfer at the top
+    wz1 = zt + 2.0
     for s in (-1, 1):
-        a, b = yc + s * (hw + 0.3), yc + s * (hw + 1.5)
-        feats.append(box(x0 + 4, x1 - 4, min(a, b), max(a, b), fz, zt - 0.3))
-
-    # USB end: two fixed lips over the PCB end, on both sides of the USB plug (the top of the
-    # PCB is free there, between the USB-C pins and the header plastic). The board slides under them.
-    lip_z = zt + 0.2
+        yi = yc + s * (hw + g)
+        prof = [(yi, fz), (yi + s * 1.4, fz), (yi + s * 1.4, wz1), (yi + s * 0.9, wz1), (yi, wz1 - 0.9)]
+        feats.append(Pos((x0 + x1) / 2, 0, 0) * extrude(
+            Plane.YZ * Polygon(*prof, align=None), amount=(x1 - x0 - 8) / 2, both=True))
+    # USB end: two posts against the PCB end, on both sides of the USB-C socket
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
-        feats.append(box(-INNER_L / 2 - 0.5, x0 - 0.2, min(a, b), max(a, b), fz, lip_z + 1.2))
-        feats.append(box(x0 - 0.3, x0 + 1.0, min(a, b), max(a, b), lip_z, lip_z + 1.2))
-
-    # antenna end: rigid stops against the PCB end, beside the antenna (plugging the USB cable
-    # pushes the board this way)
+        feats.append(box(-INNER_L / 2 - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
+    # antenna end: two stops against the PCB end, beside the antenna. They stay below the PCB
+    # top: the pin headers stick out a little past the PCB there
     ah = P.ESP_ANT_W / 2 + 1.5                  # modules are not always centred on the board
     for s in (-1, 1):
-        a, b = yc + s * ah, yc + s * (hw + 0.5)
-        feats.append(box(x1 + 0.2, x1 + 2.2, min(a, b), max(a, b), fz, zt - 0.4))
-
-    # then a thin bar across the antenna tip, held by a post at each end. It bends away when
-    # the board is pressed down, then its lip snaps over the antenna.
-    xt = x1 + P.ESP_ANT_L                       # antenna tip
-    bx0, bx1 = xt + 0.2, xt + 1.2               # 1 mm thick, free space behind it
-    alip_z = zb + 0.15                          # the antenna top is level with the PCB underside
-    bz1 = alip_z + 1.2
-    for s in (-1, 1):
-        a, b = yc + s * 12.5, yc + s * 15.0
-        feats.append(box(bx0, bx1, min(a, b), max(a, b), fz, bz1))
-    feats.append(box(bx0, bx1, yc - 12.5, yc + 12.5, zb - 1.5, bz1))   # a bridge, free under it
-    lip = [(bx0 + 0.1, alip_z), (xt - 0.6, alip_z), (xt - 0.6, alip_z + 0.3), (bx0 + 0.1, bz1)]
-    feats.append(Pos(0, yc, 0) * extrude(Plane.XZ * Polygon(*lip, align=None), amount=6.0, both=True))
+        a, b = yc + s * ah, yc + s * (hw + g + 1.4)
+        feats.append(box(x1 + g, x1 + g + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
 
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
     t += fuse_all(feats) & keep
@@ -209,7 +200,7 @@ def lid():
     # seats for the wheel foot and for the connector cover
     pz0 = TRAY_H - POCKET_D
     foot = box(WHEEL_X - P.FOOT_W / 2 - 0.25, WHEEL_X + P.FOOT_W / 2 + 0.25,
-               WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + P.CAP_T + 0.25, pz0, TRAY_H + 1)
+               WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + 0.25, pz0, TRAY_H + 1)
     cover = box(WHEEL_X - COVER_HW - 0.25, WHEEL_X + COVER_HW + 0.25,
                 WHEEL_Y + COVER_Y0 - 0.25, WHEEL_Y + COVER_Y1 + P.COVER_WALL + 0.25, pz0, TRAY_H + 1)
     if vol((foot + cover) & inner) > 0.1:
@@ -245,10 +236,11 @@ def wheel():
         P.WHEEL_WINDOW_D / 2 + P.WHEEL_FLARE, P.WHEEL_WINDOW_D / 2, P.WHEEL_FLARE, align=CEN))
     body -= cyl_y(P.LCD_GLASS_D + 2 * P.FIT, Y_GLASS, Y_PCB + 0.01, z=H_CENTER)
     body -= cyl_y(P.LCD_PCB_D + 2 * P.FIT, Y_PCB, WHEEL_DEPTH + 1, z=H_CENTER)
-    # the tab at the bottom of the display PCB (1 mm deeper at the front for the parts on it),
-    # open down to the bottom of the foot: no thin ledge under it
+    # the tab at the bottom of the display PCB: its slot starts at the same depth as the glass
+    # seat (no step to catch the bottom of the glass or its ribbon) and is open down to the
+    # bottom of the foot (no thin ledge under it)
     tw = P.LCD_TAB_W / 2 + P.FIT
-    body -= box(-tw, tw, Y_PCB - 1.0, WHEEL_DEPTH + 1, -1, H_CENTER)
+    body -= box(-tw, tw, Y_GLASS, WHEEL_DEPTH + 1, -1, H_CENTER)
     # bay behind the PCB: the Dupont connectors point straight back, the wires go down
     body -= box(-P.BAY_W / 2, P.BAY_W / 2, Y_BACK, WHEEL_DEPTH + 1, -1, BAY_TOP)
     if P.CAP_SCREWS:
@@ -264,10 +256,9 @@ def cap():
     boss = cyl_y(P.LCD_PCB_D + 2 * P.FIT - 2 * P.CAP_PRESS, Y_BACK, WHEEL_DEPTH, z=zc)
     boss -= cyl_y(P.LCD_PCB_D - 8, Y_BACK - 1, WHEEL_DEPTH + 1, z=zc)
     c = flange + boss
-    # the connectors go through here: a U shaped notch open at the bottom of the cap,
-    # the boss only presses on the round part of the PCB
-    c -= box(-P.BAY_W / 2 + 4, P.BAY_W / 2 - 4, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1,
-             -1, max(BAY_TOP, H_CENTER - P.LCD_PCB_D / 2 + 3.0))
+    # cut flat at the bottom: the tab and its connectors stay free, and the flat edge rests on
+    # the top of the connector cover (which hides the opening)
+    c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
     if P.CAP_SCREWS:
         for s in (-1, 1):
             c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
