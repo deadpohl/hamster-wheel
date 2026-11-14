@@ -29,7 +29,7 @@ WIRE_BEND_LCD = 6.0     # room behind the display connectors for the wires to be
 # 38 pin DevKit style board. It lies UPSIDE DOWN in the tray: pins up, resting on its
 # module and USB-C socket, in a pocket. The antenna end goes in first, under two rigid
 # hooks, then the USB end is laid down. The Dupont connectors and wires stay inside the tray.
-ESP_L = 47.0            # measure me: PCB length, WITHOUT the antenna
+ESP_L = 48.0            # measure me: PCB length, WITHOUT the antenna
 ESP_W = 28.0            # measure me: PCB width
 ESP_ANT_L = 6.0         # measure me: how far the antenna sticks out past the end of the PCB
 ESP_ANT_W = 18.0        # measure me: width of that antenna
@@ -41,8 +41,8 @@ WIRE_BEND = 8.0         # room above the Dupont connectors for the wires to bend
 USB_NOSE = 1.5          # measure me: how far the USB-C socket sticks out past the end of the PCB
 USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a big moulded end)
 ESP_GAP = 0.3           # clearance around the PCB in its pocket
-ESP_STOP_GAP = 1.3      # room between the antenna end of the PCB and its stops, to tilt the board in
-ESP_HOOK = 2.2          # how far the two hooks on those stops reach (from the stop face)
+ESP_STOP_GAP = 0.8      # room between the antenna end of the PCB and its stops, to tilt the board in
+ESP_HOOK = 2.1          # how far the two hooks on those stops reach (from the stop face)
 
 # ------------------------------------------------------------------- tray
 TRAY_L = 90.0           # outer size along X
