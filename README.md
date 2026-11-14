@@ -128,7 +128,7 @@ printing: **do not rotate them**, and you do not need supports.
 | Order | File | What it is | Size (mm) | Material |
 |---|---|---|---|---|
 | 1 | `wheel.stl` | The wheel (holds the screen) | 50 x 53 x 15 | PLA or PETG |
-| 2 | `wheel_cap.stl` | Closes the back of the wheel | 48 x 39 x 8 | PLA or PETG |
+| 2 | `wheel_cap.stl` | Closes the back of the wheel | 48 x 37 x 8 | PLA or PETG |
 | 3 | `wheel_cover.stl` | Hides the wires behind the wheel | 40 x 19 x 16 | PLA or PETG |
 | 4 | `tray.stl` | The red box that holds the ESP32 | 90 x 68 x 33 | PLA or PETG |
 | 5 | `lid.stl` | The lid, the floor of the cage | 87 x 65 x 10 | PLA or PETG |

@@ -259,10 +259,9 @@ def cap():
     # the flange is cut flat at the bottom and rests on the top of the connector cover. The
     # boss is cut away in front of the tab up to the centre, the same slot as in the wheel:
     # it only presses on the round part of the PCB, beside and above the tab
-    c -= box(-P.WHEEL_D, P.WHEEL_D, WHEEL_DEPTH, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
+    c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
     tw = P.LCD_TAB_W / 2 + P.FIT
     c -= box(-tw, tw, Y_BACK - 1, WHEEL_DEPTH, -1, H_CENTER)
-    c -= box(-tw, tw, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
     if P.CAP_SCREWS:
         for s in (-1, 1):
             c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
