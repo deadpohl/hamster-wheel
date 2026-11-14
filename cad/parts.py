@@ -256,9 +256,12 @@ def cap():
     boss = cyl_y(P.LCD_PCB_D + 2 * P.FIT - 2 * P.CAP_PRESS, Y_BACK, WHEEL_DEPTH, z=zc)
     boss -= cyl_y(P.LCD_PCB_D - 8, Y_BACK - 1, WHEEL_DEPTH + 1, z=zc)
     c = flange + boss
-    # cut flat at the bottom: the tab and its connectors stay free, and the flat edge rests on
-    # the top of the connector cover (which hides the opening)
-    c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
+    # the flange is cut flat at the bottom and rests on the top of the connector cover; the
+    # boss keeps filling the round PCB seat except in front of the tab, so the opening is
+    # exactly as wide as the tab slot of the wheel
+    c -= box(-P.WHEEL_D, P.WHEEL_D, WHEEL_DEPTH, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
+    tw = P.LCD_TAB_W / 2 + P.FIT
+    c -= box(-tw, tw, Y_BACK - 1, WHEEL_DEPTH + 1, -1, COVER_TOP)
     if P.CAP_SCREWS:
         for s in (-1, 1):
             c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
