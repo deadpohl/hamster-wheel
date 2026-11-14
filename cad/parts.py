@@ -152,12 +152,22 @@ def tray():
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
         feats.append(box(-INNER_L / 2 - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
-    # antenna end: two stops against the PCB end, beside the antenna. They stay below the PCB
-    # top: the pin headers stick out a little past the PCB there
-    ah = P.ESP_ANT_W / 2 + 1.5                  # modules are not always centred on the board
+    # antenna end: two stops beside the antenna, ESP_STOP_GAP away from the PCB end. They stay
+    # below the PCB top where the pin headers stick out a little past the PCB. Between the
+    # antenna and the headers, each stop rises into a rigid hook over the PCB end. The board
+    # goes in tilted, antenna end first under the hooks, then the USB end is laid down: it
+    # pivots on its module, which sits right under the PCB end, so the PCB end moves toward
+    # the stops without rising (hence the gap) and nothing has to bend.
+    xs = x1 + P.ESP_STOP_GAP                    # face of the stops
+    ah = P.ESP_ANT_W / 2 + 0.6                  # clear of the antenna
+    hh = hw - 2.55                              # clear of the header plastic (inner edge at hw - 2.54)
+    hz0 = zt + 0.4                              # underside of the hooks
     for s in (-1, 1):
         a, b = yc + s * ah, yc + s * (hw + g + 1.4)
-        feats.append(box(x1 + g, x1 + g + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
+        feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
+        a, b = yc + s * ah, yc + s * (hh - 0.3)
+        feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, hz0 + 1.0))
+        feats.append(box(xs - P.ESP_HOOK, xs, min(a, b), max(a, b), hz0, hz0 + 1.0))
 
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
     t += fuse_all(feats) & keep

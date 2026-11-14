@@ -102,13 +102,16 @@ The script checks that every part is a closed mesh and that the assembled parts 
 ### How the parts work together
 
 - **ESP32:** it lies upside down in the front half of the tray, resting on its module and USB-C
-  socket (pockets under the EN and BOOT buttons keep them free). It drops into a pocket: low walls
-  along the long edges, two posts at the USB end, two stops beside the antenna, `ESP_GAP` of
-  clearance all around. There are no clips on purpose: the header plastic covers the long edges,
-  and two snap designs failed in test prints (fragile, hard to insert). The pocket is enough for
-  the USB cable, since pushing or pulling the plug presses the board down, never up. Double-sided
-  foam tape under the module is the optional permanent hold. The tray is deep enough for the
-  Dupont connectors and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
+  socket (pockets under the EN and BOOT buttons keep them free). It sits in a pocket: low walls
+  along the long edges, two posts at the USB end, two stops beside the antenna. The stops are
+  `ESP_STOP_GAP` away from the PCB end and carry rigid hooks (`ESP_HOOK`) over it, in the narrow
+  strip between the antenna and the header plastic. The board goes in tilted, antenna end first:
+  it pivots on its module, which sits right under the PCB end, so that end moves toward the
+  stops without rising and slips under the hooks. Nothing bends: the header plastic covers the
+  long edges, and two flexing snap designs failed in test prints (fragile, hard to insert).
+  Pushing or pulling the USB plug presses the board down, never up. Double-sided foam tape under
+  the module is the optional permanent hold. The tray is deep enough for the Dupont connectors
+  and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
 - **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
   glass seat and is open down to the bottom of the foot. The header pins point straight back from
   the tab, so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires

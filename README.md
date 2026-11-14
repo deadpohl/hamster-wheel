@@ -182,11 +182,13 @@ of glue. If the screen rattles, a small piece of foam tape between the screen an
   faces **down**.
 - The **USB plug** end goes to the **left wall**, where the opening is, and the antenna (the short
   black tongue at the other end) points to the right.
-- Drop it flat into its **pocket**: low walls on each side and small stops at each end keep it in
-  place. Nothing clips, nothing to force.
+- Hold the board tilted, USB end up. Slide the antenna end down against the two small stops on the
+  right, so the end of the board goes **under their little hooks**, then lay the USB end down into
+  the **pocket**. Nothing bends, nothing to force.
+- To take it out, lift the USB end first, then pull the board out of the hooks.
 - Optional: a small square of thin double-sided foam tape (1 mm at most) under the silver module
-  keeps the board in place for good, even if you turn the tray over. Keep the tape away from the
-  two small buttons next to the USB socket.
+  keeps the board in place for good. Keep the tape away from the two small buttons next to the USB
+  socket.
 
 **5. Connect and close.** Plug the 7 wires coming from the lid onto the ESP32 pins (table above).
 The plugs stand up, the wires curl inside the tray: there is room for them. Lower the **lid** onto
