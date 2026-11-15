@@ -16,7 +16,7 @@ How it is laid out (plain Dupont jumper wires, no soldering):
   * the display connectors point straight back out of the wheel foot, in the shavings.
     The wires go down through a hole in the platform.
 """
-from math import hypot
+from math import atan, degrees, hypot
 
 from build123d import Align, Box, Cone, Cylinder, Location, Plane, Polygon, Pos, Rot, extrude
 
@@ -61,13 +61,16 @@ WHEEL_Y = -HOLE_Y1 / 2
 
 # Rim: the tray wall is the outer side of the cage groove, a thin inner wall the other side.
 # Under the groove a solid band holds that inner wall; under the band a ledge carries the
-# platform. Offsets are distances inward from the tray outline.
+# platform. The walls lean out by FLARE, so the top outline is outline(FLARE). Offsets are
+# distances inward from the tray outline at the BOTTOM (they include the flare).
 GROOVE_Z = WHEEL_Z + P.FOOT_H - P.RING_OVER_GROOVE   # floor of the cage groove
 RIM_Z = GROOVE_Z + P.GROOVE_WALL_H                   # top of the inner wall
 TRAY_H = RIM_Z - 2.0                                 # top of the tray wall: lower, it guides the cage in
+FLARE_DEG = degrees(atan(P.FLARE / TRAY_H))          # lean of the walls
 GROOVE_W = P.CAGE_T + 2 * P.CAGE_FIT
-CAGE_OFF = P.WALL + P.CAGE_FIT                       # outer face of the cage walls
-GROOVE_IN_OFF = P.WALL + GROOVE_W                    # inner face of the groove
+TOP_WALL_OFF = P.WALL - P.FLARE                      # inner face of the wall at the top (outer side of the groove)
+CAGE_OFF = TOP_WALL_OFF + P.CAGE_FIT                 # outer face of the cage walls
+GROOVE_IN_OFF = TOP_WALL_OFF + GROOVE_W              # inner face of the groove
 RIM_IN_OFF = GROOVE_IN_OFF + P.GROOVE_WALL_W         # inner face of the inner wall and of the band
 PLATE_OFF = RIM_IN_OFF + P.PLATE_FIT                 # edge of the platform
 LEDGE_OFF = PLATE_OFF + P.LEDGE_W                    # inner edge of the ledge
@@ -133,26 +136,29 @@ def edges(pts):
 # --------------------------------------------------------------------- tray
 def tray():
     c = P.LEAD_IN
-    t = prism(outline(0), 0, TRAY_H) - prism(outline(-P.WALL), P.FLOOR, TRAY_H + 1)
+    # the walls lean out, the floor keeps the bottom outline. Above the groove floor the inner
+    # face is vertical: that is the outer side of the groove
+    t = tapered(outline(0), 0, TRAY_H, -FLARE_DEG)
+    cavity = tapered(outline(-P.WALL), 0, GROOVE_Z + 0.01, -FLARE_DEG) - prism(outline(20), -1, P.FLOOR)
+    t -= cavity + prism(outline(-TOP_WALL_OFF), GROOVE_Z, TRAY_H + 1)
     # lead-in: the groove side of the wall is chamfered at the top
-    t -= tapered(outline(-P.WALL), TRAY_H - c, c + 0.01, -45)
+    t -= tapered(outline(-TOP_WALL_OFF), TRAY_H - c, c + 0.01, -45)
 
     # band under the groove: its inner face surrounds the platform, its bottom is the ledge
-    # the platform rests on, with a 45 degree chamfer under it (prints without support)
-    h = LEDGE_OFF - P.WALL
-    zb = PLATE_Z0 - h
-    band = prism(outline(-P.WALL + 0.2), zb, GROOVE_Z)
+    # the platform rests on, with a 45 degree chamfer under it down to the wall (no support)
+    h = 14.0
+    band = cavity & prism(outline(20), PLATE_Z0 - h, GROOVE_Z)
     band -= prism(outline(-RIM_IN_OFF), PLATE_Z0, GROOVE_Z + 1)
-    band -= tapered(outline(-P.WALL + 0.2), zb - 0.2, h + 0.2 + 0.01, 45)
+    band -= tapered(outline(-LEDGE_OFF + h), PLATE_Z0 - h - 0.01, h + 0.02, 45)
     # inner wall of the groove, chamfered at the top on the groove side
     inner = prism(outline(-GROOVE_IN_OFF), GROOVE_Z - 0.1, RIM_Z - c) \
         + tapered(outline(-GROOVE_IN_OFF), RIM_Z - c, c, 45)
     inner -= prism(outline(-RIM_IN_OFF), GROOVE_Z - 1, RIM_Z + 1)
     t += band + inner
 
-    # one dimple per wall, where the snap bump of the cage clicks in
+    # one dimple per long wall (not the corner chamfers), where the snap bump of the cage clicks in
     for (mx, my), (tx, ty), (nx, ny), ln in edges(outline(-GROOVE_IN_OFF)):
-        if ln > 10:
+        if ln > 20:
             pl = Plane(origin=(mx, my, GROOVE_Z + 2.5), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
             t -= Location(pl) * (Pos(0, 0, -0.1) * Cone(
                 P.BUMP_R + 0.6, P.BUMP_R + 0.1, P.DIMPLE_D + 0.2, align=CEN))

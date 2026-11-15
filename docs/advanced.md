@@ -84,7 +84,8 @@ yours with callipers and edit the lines tagged `measure me` in [`cad/params.py`]
 | `LCD_CONN_LEN`, `LCD_PIN_Z` | how far the display connectors stick out behind the PCB, and the height of the pin row above the bottom of the tab |
 | `USB_HOLE_W` | width of your USB-C plug body (some cables have a big moulded end) |
 
-The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint), `CORNER_CUT` (the chamfered
+The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint at the bottom), `FLARE` (how
+much the walls lean out, per side), `WHEEL_X` (the wheel stands off centre), `CORNER_CUT` (the chamfered
 corners, 0 for square ones), `WALL_PITCH` (gap between the cage bars), `BELT_POS` (height of the
 horizontal bar) and the hinge settings.
 

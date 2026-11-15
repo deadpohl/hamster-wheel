@@ -130,9 +130,9 @@ printing: **do not rotate them**, and you do not need supports.
 |---|---|---|---|---|
 | 1 | `wheel.stl` | The wheel (holds the screen) | 48 x 55 x 15 | PLA or PETG |
 | 2 | `wheel_cap.stl` | Closes the back of the wheel | 48 x 47 x 8 | PLA or PETG |
-| 3 | `tray.stl` | The red tub, the ESP32 lies at the bottom | 105 x 68 x 42 | PLA or PETG |
-| 4 | `platform.stl` | The floor of the cage, over the ESP32 | 91 x 54 x 3 | PLA or PETG |
-| 5 | `cage_net.stl` | The cage, printed **flat** | 210 x 173 x 3 | PETG (best) or PLA |
+| 3 | `tray.stl` | The red tub, the ESP32 lies at the bottom | 111 x 74 x 42 | PLA or PETG |
+| 4 | `platform.stl` | The floor of the cage, over the ESP32 | 97 x 60 x 3 | PLA or PETG |
+| 5 | `cage_net.stl` | The cage, printed **flat** | 216 x 179 x 3 | PETG (best) or PLA |
 
 Settings that work: layer height **0.2 mm**, infill **15 %**, **no supports**, 0.4 mm nozzle.
 

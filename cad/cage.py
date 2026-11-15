@@ -88,7 +88,7 @@ def wall_panel(length, beta_tan):
         body -= window - _fuse(bars) if bars else window
 
     # snap bump on the inner face of the skirt (fits the groove in the tray wall)
-    if length > 10:                          # same rule as the dimples of the tray
+    if length > 20:                          # same rule as the dimples of the tray (long walls only)
         # tall enough to cross the clearance of the groove and still reach into the dimple
         body += Pos(0, HW - 2.5, T - 0.1) * Cone(P.BUMP_R + 0.3, P.BUMP_R - 0.2, P.CAGE_FIT + 0.6,
                                                     align=(Align.CENTER, Align.CENTER, Align.MIN))
