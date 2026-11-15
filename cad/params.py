@@ -11,7 +11,8 @@
 # GC9A01 1.28" round module, 7 pin version (VCC GND SCL SDA DC CS RST).
 # The PCB is a disc with a tab at the bottom that carries the pins. The pins stick out
 # of the BACK of the tab, so the Dupont connectors point straight backwards, out of the
-# back of the wheel foot. The wires then go down through a hole in the platform.
+# back of the wheel foot. The wires go down through a slot in the platform that is open at
+# its back edge: they slide in without unplugging anything. A small cover hides the connectors.
 LCD_PCB_D = 38.0        # measure me: diameter of the round part of the PCB
 LCD_H_TOTAL = 45.0      # measure me: from the top of the disc to the bottom edge of the tab
 LCD_TAB_W = 24.0        # measure me: width of the tab (the pocket is cut this wide, a bit more is fine)
@@ -27,8 +28,9 @@ WIRE_BEND_LCD = 6.0     # room behind the display connectors for the wires to be
 
 # ------------------------------------------------------------------ ESP32
 # 38 pin DevKit style board. It lies UPSIDE DOWN on the floor of the tray: pins up, resting
-# on its module and USB-C socket, in a low pocket. Two dots of hot glue hold it. The Dupont
-# connectors and the wires stay under the platform.
+# on its module and USB-C socket, in a snug pocket: a friction fit. Print esp_fit_test.stl
+# first to check it (two dots of hot glue if it is loose). The Dupont connectors and the
+# wires stay under the platform.
 ESP_L = 48.0            # measure me: PCB length, WITHOUT the antenna
 ESP_W = 28.0            # measure me: PCB width
 ESP_ANT_L = 6.0         # measure me: how far the antenna sticks out past the end of the PCB
@@ -41,6 +43,9 @@ WIRE_BEND = 8.0         # room above the Dupont connectors for the wires to bend
 USB_NOSE = 1.5          # measure me: how far the USB-C socket sticks out past the end of the PCB
 USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a big moulded end)
 ESP_GAP = 0.3           # clearance around the PCB in its pocket
+ESP_STOP_GAP = 0.0      # clearance between the antenna end of the PCB and its two stops (the friction fit)
+ESP_WALL_T = 2.0        # thickness of the pocket walls and stops
+ESP_WALL_H = 3.5        # height of the pocket walls above the PCB
 
 # ------------------------------------------------------------------- tray
 TRAY_L = 105.0          # outer size along X (longer than wide, like a real cage)
@@ -52,6 +57,8 @@ FLOOR = 2.0
 BOARD_X = -22.0         # ESP32 position along X (its USB end faces the back wall, the cable leaves at the back)
 WHEEL_X = 15.0          # wheel position along X (0 = centred). Off centre, to the right, away from
                         # the ESP32 connectors: the wires from the display have room to curl
+WHEEL_Y = -8.0          # front face of the wheel along Y (0 = middle of the tray, negative = toward
+                        # the front). Far enough back for the wire slot to reach the platform edge
 # The top of the tray is the groove for the cage: the tray wall is its outer side, a thin
 # inner wall is the other side.
 GROOVE_WALL_H = 7.0     # height of the inner wall of the groove (the tray wall is 2 mm lower: it guides the cage in)
@@ -65,6 +72,7 @@ PLATE_FIT = 0.2         # clearance around the platform, per side
 PLATE_GRIP = 0.15       # six small ribs on the platform edge press this far into the wall: a friction fit
                         # (too tight: sand the ribs or lower it, too loose: raise it, 0 = no ribs)
 LEDGE_W = 1.5           # how far the ledge under the platform reaches in
+COVER_FIT = 0.05        # clearance of the lips of the connector cover in the platform slot, per side
 RING_OVER_GROOVE = 3.8  # bottom of the wheel ring above the floor of the cage groove (3.8 keeps the
                         # cage height of the first version, an already printed cage still fits)
 

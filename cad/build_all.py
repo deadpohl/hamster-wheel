@@ -37,7 +37,9 @@ def print_parts():
         "platform": to_bed(K.platform()),               # top side up
         "wheel": to_bed(Rot(X=90) * K.wheel()),         # front face on the bed
         "wheel_cap": to_bed(Rot(X=-90) * K.cap()),      # flange on the bed
+        "dupont_cover": to_bed(Rot(X=180) * K.cover()), # roof on the bed
         "cage_net": to_bed(C.net()),                    # flat net, outer faces on the bed
+        "esp_fit_test": to_bed(K.esp_fit_test()),       # optional: the ESP32 pocket alone
     }
 
 
@@ -47,6 +49,7 @@ def assembly_parts():
         "platform": K.platform(grip=False),     # the friction ribs overlap the tray on purpose
         "wheel": K.place_wheel(K.wheel()),
         "wheel_cap": K.place_wheel(K.cap()),
+        "dupont_cover": K.place_wheel(K.cover()),
         "cage": C.folded(),
     }
 
@@ -76,7 +79,7 @@ def main():
                    and (not one_body or len(m.split(only_watertight=False)) == 1))
         ok &= not bad
         e = m.extents
-        print(f"  {name:10s} {e[0]:6.1f} x {e[1]:6.1f} x {e[2]:6.1f} mm  "
+        print(f"  {name:12s} {e[0]:6.1f} x {e[1]:6.1f} x {e[2]:6.1f} mm  "
               f"{abs(m.volume) / 1000:6.1f} cm3  {'WATERTIGHT' if not bad else 'PROBLEM'}")
 
     print("Interference check (assembled, should all be ~0 mm3)")

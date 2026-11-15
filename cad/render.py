@@ -17,6 +17,7 @@ COLORS = {
     "platform": (218, 186, 138),
     "wheel": (244, 204, 32),
     "wheel_cap": (222, 170, 22),
+    "dupont_cover": (190, 150, 100),
     "cage": (118, 158, 190),
     "esp32": (30, 130, 80),
     "display": (40, 40, 48),
@@ -107,10 +108,10 @@ def make_previews(asm, ghosts, print_parts, out_dir):
             items.append((m, COLORS[n]))
         return items
 
-    render(lay(["tray", "platform", "wheel", "wheel_cap", "cage"]), az=-32, el=20).save(
-        out_dir / "assembly.jpg", quality=90)
-    render(lay(["tray", "platform", "wheel", "wheel_cap", "cage"],
-               {"platform": (0, 0, 35), "wheel": (0, 0, 50), "wheel_cap": (0, 32, 50), "cage": (0, 0, 145)}),
+    parts = ["tray", "platform", "wheel", "wheel_cap", "dupont_cover", "cage"]
+    render(lay(parts), az=-32, el=20).save(out_dir / "assembly.jpg", quality=90)
+    render(lay(parts, {"platform": (0, 0, 35), "wheel": (0, 0, 50), "wheel_cap": (0, 32, 50),
+                       "dupont_cover": (0, 60, 50), "cage": (0, 0, 145)}),
            az=-32, el=22, size=(1000, 1100)).save(out_dir / "exploded.jpg", quality=90)
     render(lay(["tray"], extra=["esp32"]), az=-15, el=72, size=(1000, 760)).save(
         out_dir / "tray_inside.jpg", quality=90)

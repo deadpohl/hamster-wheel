@@ -13,8 +13,9 @@ How it is laid out (plain Dupont jumper wires, no soldering):
     and USB-C socket, in a low pocket. Two dots of hot glue hold it;
   * a flat platform rests on a ledge above the ESP32 and its Dupont connectors, below the
     rim. The wheel stands on it, and a pinch of real wood shavings hides it;
-  * the display connectors point straight back out of the wheel foot, in the shavings.
-    The wires go down through a hole in the platform.
+  * the display connectors point straight back out of the wheel foot, under a small cover.
+    The wires go down through a slot in the platform, open at its back edge: they slide in
+    without unplugging anything.
 """
 from math import atan, degrees, hypot
 
@@ -55,10 +56,18 @@ POCKET_D = 1.2                                    # depth of the foot seat in th
 WHEEL_Z = PLATE_TOP - POCKET_D                    # assembly Z of the foot base
 BAY_TOP = PIN_Z + 1.27 + 3.0                      # height of the bay behind the display PCB
 CAP_CUT = PIN_Z + 1.27 + 0.5                      # the cap is cut flat here, over the display connectors
-HOLE_Y1 = Y_BACK + P.LCD_CONN_LEN + P.WIRE_BEND_LCD   # back end of the wire hole (wheel frame)
+HOLE_Y1 = Y_BACK + P.LCD_CONN_LEN + P.WIRE_BEND_LCD   # back end of the room for the wires (wheel frame)
 WHEEL_X = P.WHEEL_X
-# the wheel and its wire hole are centred front to back
-WHEEL_Y = -HOLE_Y1 / 2
+WHEEL_Y = P.WHEEL_Y
+# connector cover and wire slot (wheel frame): the cover walls stand on the platform beside
+# the slot, a lip under each wall drops into the slot and holds the cover in place
+CONN_HW = 7 * 2.54 / 2                            # half width of the 7 display connectors
+COVER_IN = CONN_HW + 0.5                          # inner face of the cover walls
+COVER_LIP = 1.2                                   # lip width
+COVER_WALL = 2.4                                  # wall thickness (the inner half is the lip)
+COVER_T = 1.6                                     # roof and back wall thickness
+SLOT_HW = COVER_IN + COVER_LIP + P.COVER_FIT      # half width of the wire slot
+SLOT_Y0 = Y_BACK + 0.5                            # front end of the slot, under the bay of the foot
 
 # Rim: the tray wall is the outer side of the cage groove, a thin inner wall the other side.
 # Under the groove a solid band holds that inner wall; under the band a ledge carries the
@@ -167,48 +176,68 @@ def tray():
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
     feats, cuts = _esp_mount()
     t += (BOARD_LOC * feats) & keep
+    # USB-C opening in the back wall, open at the bottom: the plug body is taller than the
+    # socket and reaches below the floor level
+    cuts += box(-USB_MARGIN - P.WALL - P.FLARE - 2, -USB_MARGIN + 0.5,
+                -P.USB_HOLE_W / 2, P.USB_HOLE_W / 2, -1, BOARD_TOP + 2.5)
     return t - BOARD_LOC * cuts
 
 
 def _esp_mount():
     """ESP32 pocket in the BOARD frame: (features to add, cuts)."""
-    # ESP32 upside down, resting on its module and USB-C socket, in a low pocket that stops
-    # it in X and Y. Nothing clips: two dots of hot glue on the walls hold it.
+    # ESP32 upside down, resting on its module and USB-C socket, in a snug pocket: the posts
+    # at the USB end and the stops at the antenna end hold it by friction, the long walls
+    # keep it straight. Nothing clips (the header plastic covers the long edges).
     yc, x0, x1 = 0.0, 0.0, P.ESP_L
     hw = P.ESP_W / 2
     zt = BOARD_TOP
     fz = P.FLOOR - 0.1
     g = P.ESP_GAP
+    t = P.ESP_WALL_T
     feats = []
     # long walls beside the PCB and the header plastic, with a lead-in chamfer at the top
-    wz1 = zt + 2.0
+    wz1 = zt + P.ESP_WALL_H
     for s in (-1, 1):
         yi = yc + s * (hw + g)
-        prof = [(yi, fz), (yi + s * 1.4, fz), (yi + s * 1.4, wz1), (yi + s * 0.9, wz1), (yi, wz1 - 0.9)]
+        prof = [(yi, fz), (yi + s * t, fz), (yi + s * t, wz1), (yi + s * 0.9, wz1), (yi, wz1 - 0.9)]
         feats.append(Pos((x0 + x1) / 2, 0, 0) * extrude(
             Plane.YZ * Polygon(*prof, align=None), amount=(x1 - x0 - 8) / 2, both=True))
     # USB end: two posts against the PCB end, on both sides of the USB-C socket
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
         feats.append(box(-USB_MARGIN - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
-    # antenna end: two stops beside the antenna, below the PCB top (the pin headers stick
-    # out a little past the PCB end)
-    xs = x1 + g
+    # antenna end: two thick stops beside the antenna, snug against the PCB end, a little
+    # higher than the PCB with a lead-in chamfer
+    xs = x1 + P.ESP_STOP_GAP
+    st = t + 1.0
+    sz = zt + 1.5
+    prof = [(xs, fz), (xs + st, fz), (xs + st, sz), (xs + 0.6, sz), (xs, sz - 0.6)]
     ah = P.ESP_ANT_W / 2 + 0.6
     for s in (-1, 1):
-        a, b = yc + s * ah, yc + s * (hw + g + 1.4)
-        feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
+        a, b = yc + s * ah, yc + s * (hw + g + t)
+        feats.append(Pos(0, (a + b) / 2, 0) * extrude(
+            Plane.XZ * Polygon(*prof, align=None), amount=abs(b - a) / 2, both=True))
 
     cuts = []
     # pockets under the EN and BOOT buttons, so they can never be pressed by the floor
     for s in (-1, 1):
         a, b = yc + s * 5.0, yc + s * 11.5
         cuts.append(box(x0 - 0.2, x0 + 7.5, min(a, b), max(a, b), P.FLOOR - 1.2, P.FLOOR + 0.1))
-    # USB-C opening in the wall, open at the bottom: the plug body is taller than the socket
-    # and reaches below the floor level
-    cuts.append(box(-USB_MARGIN - P.WALL - P.FLARE - 2, -USB_MARGIN + 0.5,
-                    yc - P.USB_HOLE_W / 2, yc + P.USB_HOLE_W / 2, -1, zt + 2.5))
+    # the pin headers stick out a little past the PCB end: a relief in the stops, above the PCB
+    for s in (-1, 1):
+        y = yc + s * ROW_DY
+        cuts.append(box(xs - 0.1, x1 + 1.0, y - 1.6, y + 1.6, zt, sz + 1))
     return fuse_all(feats), fuse_all(cuts)
+
+
+def esp_fit_test():
+    """The ESP32 pocket alone on a piece of floor, in the BOARD frame: a quick print to check
+    the friction fit before printing the whole tray."""
+    feats, cuts = _esp_mount()
+    m = 1.5
+    hw = P.ESP_W / 2 + P.ESP_GAP + P.ESP_WALL_T + m
+    plate = box(-USB_MARGIN - 0.5 - m, P.ESP_L + P.ESP_STOP_GAP + P.ESP_WALL_T + 1.0 + m, -hw, hw, 0, P.FLOOR)
+    return plate + feats - cuts
 
 
 # ----------------------------------------------------------------- platform
@@ -221,17 +250,22 @@ def platform(grip=True):
         r = 1.5
         a = P.TRAY_L / 2 - PLATE_OFF + P.PLATE_FIT + P.PLATE_GRIP - r
         b = P.TRAY_W / 2 - PLATE_OFF + P.PLATE_FIT + P.PLATE_GRIP - r
-        spots = [(x, s * b) for x in (-P.TRAY_L / 4, P.TRAY_L / 4) for s in (-1, 1)] + [(s * a, 0) for s in (-1, 1)]
+        # (the ribs on the long sides stay clear of the wire slot)
+        spots = [(x, s * b) for x in (-P.TRAY_L / 3, P.TRAY_L / 3) for s in (-1, 1)] + [(s * a, 0) for s in (-1, 1)]
         for x, y in spots:
             p += Pos(x, y, PLATE_Z0) * Cone(r - 0.4, r, P.PLATE_T, align=CEN)
     seat = box(WHEEL_X - P.FOOT_W / 2 - 0.25, WHEEL_X + P.FOOT_W / 2 + 0.25,
                WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + 0.25, WHEEL_Z, PLATE_TOP + 1)
-    # wire hole under the foot and behind it: big enough to pass the Dupont connectors one by one
-    hole = box(WHEEL_X - 10, WHEEL_X + 10, WHEEL_Y + Y_BACK + 0.5, WHEEL_Y + HOLE_Y1,
+    # wire slot from under the bay of the foot to the back edge: the wires slide in, nothing
+    # to unplug. The lips of the connector cover drop into it
+    slot = box(WHEEL_X - SLOT_HW, WHEEL_X + SLOT_HW, WHEEL_Y + SLOT_Y0, P.TRAY_W,
                PLATE_Z0 - 1, PLATE_TOP + 1)
-    if vol((seat + hole) - prism(outline(-PLATE_OFF - 2.0), PLATE_Z0 - 2, PLATE_TOP + 2)) > 0.1:
-        raise ValueError("the wheel does not fit on the platform: increase TRAY_L / TRAY_W")
-    return p - seat - hole
+    inside = prism(outline(-PLATE_OFF - 2.0), PLATE_Z0 - 2, PLATE_TOP + 2)
+    cover_back = box(WHEEL_X - 1, WHEEL_X + 1, WHEEL_Y + HOLE_Y1, WHEEL_Y + HOLE_Y1 + COVER_T, PLATE_Z0, PLATE_TOP)
+    if vol(seat + cover_back - inside) > 0.1:
+        raise ValueError("the wheel and its connector cover do not fit on the platform: "
+                         "check WHEEL_X / WHEEL_Y, or increase TRAY_L / TRAY_W")
+    return p - seat - slot
 
 
 # -------------------------------------------------------------------- wheel
@@ -250,11 +284,12 @@ def wheel():
     body -= cyl_y(P.LCD_GLASS_D + 2 * P.FIT, Y_GLASS, Y_PCB + 0.01, z=H_CENTER)
     body -= cyl_y(P.LCD_PCB_D + 2 * P.FIT, Y_PCB, WHEEL_DEPTH + 1, z=H_CENTER)
     # the tab at the bottom of the display PCB: its slot starts at the same depth as the glass
-    # seat (no step to catch the bottom of the glass or its ribbon) and is open down to the
-    # bottom of the foot (no thin ledge under it)
+    # seat (no step to catch the bottom of the glass or its ribbon). Under it the foot is
+    # solid, 1 mm below the tab: a full flat bottom to glue the wheel on the platform
     tw = P.LCD_TAB_W / 2 + P.FIT
-    body -= box(-tw, tw, Y_GLASS, WHEEL_DEPTH + 1, -1, H_CENTER)
-    # bay behind the PCB: the Dupont connectors point straight back, out of the foot
+    body -= box(-tw, tw, Y_GLASS, WHEEL_DEPTH + 1, TAB_BOT - 1.0, H_CENTER)
+    # bay behind the PCB: the Dupont connectors point straight back, out of the foot. It is
+    # open at the bottom, over the wire slot of the platform
     body -= box(-P.BAY_W / 2, P.BAY_W / 2, Y_BACK, WHEEL_DEPTH + 1, -1, BAY_TOP)
     if P.CAP_SCREWS:
         for s in (-1, 1):
@@ -278,6 +313,27 @@ def cap():
     if P.CAP_SCREWS:
         for s in (-1, 1):
             c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
+    return c
+
+
+def cover():
+    """Cover over the display connectors, behind the wheel cap, in WHEEL coordinates. Open at
+    the front (the connectors come in) and at the bottom (the wires go down the slot). A lip
+    under each wall drops into the slot of the platform and holds it."""
+    zb = POCKET_D                           # top of the platform
+    zr = PIN_Z + 1.27 + 0.6                 # underside of the roof, over the connectors
+    zt = zr + COVER_T
+    yf = WHEEL_DEPTH + P.CAP_T + 0.3        # just behind the cap flange
+    yb = HOLE_Y1 + COVER_T
+    wo = COVER_IN + COVER_WALL
+    c = box(-wo, wo, yf, yb, zb, zt) - box(-COVER_IN, COVER_IN, yf - 1, HOLE_Y1, zb - 1, zr)
+    # soft top edges (sides and back): it looks less like a box in the shavings
+    for s in (-1, 1):
+        c -= Pos(s * wo, (yf + yb) / 2, zt) * (Rot(Y=45) * Box(2.83, yb - yf + 2, 2.83))
+    c -= Pos(0, yb, zt) * (Rot(X=45) * Box(2 * wo + 2, 2.83, 2.83))
+    for s in (-1, 1):
+        a, b = s * COVER_IN, s * (COVER_IN + COVER_LIP)
+        c += box(min(a, b), max(a, b), yf, yb, zb - P.PLATE_T + 0.6, zb + 0.01)
     return c
 
 
@@ -320,5 +376,5 @@ def lcd_ghost():
     pcb = cyl_y(P.LCD_PCB_D, Y_PCB, Y_BACK, z=zc)
     pcb += box(-P.LCD_TAB_W / 2, P.LCD_TAB_W / 2, Y_PCB, Y_BACK, TAB_BOT, zc)
     glass = cyl_y(P.LCD_GLASS_D, Y_GLASS, Y_PCB, z=zc)
-    conn = box(-8.9, 8.9, Y_BACK, Y_BACK + P.LCD_CONN_LEN, PIN_Z - 1.27, PIN_Z + 1.27)
+    conn = box(-CONN_HW, CONN_HW, Y_BACK, Y_BACK + P.LCD_CONN_LEN, PIN_Z - 1.27, PIN_Z + 1.27)
     return pcb + glass + conn

@@ -85,7 +85,8 @@ yours with callipers and edit the lines tagged `measure me` in [`cad/params.py`]
 | `USB_HOLE_W` | width of your USB-C plug body (some cables have a big moulded end) |
 
 The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint at the bottom), `FLARE` (how
-much the walls lean out, per side), `WHEEL_X` (the wheel stands off centre), `CORNER_CUT` (0 for square
+much the walls lean out, per side), `WHEEL_X` and `WHEEL_Y` (the wheel stands off centre, far
+enough back for the wire slot to reach the platform edge), `CORNER_CUT` (0 for square
 corners, the default, or a 45 degree chamfer), `WALL_PITCH` (gap between the cage bars), `BELT_POS` (height of the
 horizontal bar) and the hinge settings.
 
@@ -104,7 +105,7 @@ The script checks that every part is a closed mesh and that the assembled parts 
 
 - **Layout:** the tray is an open tub. The ESP32 lies on its floor; a flat platform rests on a
   ledge above it, below the rim, and the wheel stands on the platform. A pinch of real shavings
-  on the platform hides it, the foot of the wheel and the display connectors, so the wheel seems
+  on the platform hides it, the foot of the wheel and the connector cover, so the wheel seems
   to stand in the bedding of the cage. The platform height comes from the ESP32 stack
   (`ESP_UNDER_H` + `ESP_PCB_T` + `DUPONT_H` + `WIRE_BEND`), the rim height from the wheel
   (`FOOT_H`, `RING_OVER_GROOVE`): the bottom of the ring is about level with the rim. The
@@ -113,14 +114,19 @@ The script checks that every part is a closed mesh and that the assembled parts 
 - **ESP32:** it lies upside down on the floor of the tray, USB end against the back wall (the cable
   leaves at the back), GPIO pin row toward the wheel, resting on its module and USB-C socket
   (pockets under the EN and BOOT buttons keep them free). It sits in a low pocket: walls along the
-  long edges, two posts at the USB end, two stops beside the antenna. Two dots of hot glue hold
-  it. Nothing clips: the header plastic covers the long edges, and flexing snaps and hooks failed
-  or were fiddly in test prints. Pushing or pulling the USB plug presses the board down, never up.
+  long edges, two posts at the USB end, two stops beside the antenna, snug against the PCB end
+  (`ESP_STOP_GAP`): a friction fit. Nothing clips: the header plastic covers the long edges, and
+  flexing snaps and hooks failed or were fiddly in test prints. Pushing or pulling the USB plug
+  presses the board down, never up. `esp_fit_test.stl` is the pocket alone on a piece of floor:
+  print it to tune `ESP_GAP`, `ESP_STOP_GAP`, `ESP_WALL_T` and `ESP_WALL_H` before printing the
+  tray. If the board is loose, two dots of hot glue hold it.
 - **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
-  glass seat and is open down to the bottom of the straight foot. The header pins point straight
-  back from the tab, so the connectors (about 16.5 mm) stick out of the back of the foot, right at
-  the shavings level. The wires go down through a hole in the platform. The cap is cut flat just
-  above the connectors.
+  glass seat; under it the foot is solid, so its bottom is flat for gluing. The header pins point
+  straight back from the tab, so the connectors (about 16.5 mm) stick out of the back of the foot,
+  through a bay that is open at the bottom. The cap is cut flat just above them.
+- **Wires:** a slot in the platform runs from under that bay to the back edge, so the wires slide
+  in with everything plugged. A small cover hides the connectors behind the cap: its walls stand
+  on the platform beside the slot, and a lip under each wall drops into the slot (`COVER_FIT`).
 - **Cage:** one flat net (roof in the middle, one wall on each edge, joined by living hinges) that folds
   and plugs into a groove all around the rim of the tray: the tray wall is its outer side, a thin
   inner wall the other side. The roof is a little **smaller** than the

@@ -57,7 +57,7 @@ about 100 g of filament. Prices change, these are only orders of magnitude.
 - 2 self-tapping screws **M2 x 6 mm** and a small screwdriver, to lock the back cap of the wheel
   (a drop of glue works as well).
 - A drop of super glue, to keep the wheel's foot in place.
-- A hot glue gun, for two dots that hold the ESP32 in the tray.
+- A hot glue gun, only if the ESP32 is loose in its pocket (two dots).
 - A calliper or a ruler, to check your parts if something does not fit.
 
 ---
@@ -130,9 +130,11 @@ printing: **do not rotate them**, and you do not need supports.
 |---|---|---|---|---|
 | 1 | `wheel.stl` | The wheel (holds the screen) | 48 x 55 x 15 | PLA or PETG |
 | 2 | `wheel_cap.stl` | Closes the back of the wheel | 48 x 47 x 8 | PLA or PETG |
-| 3 | `tray.stl` | The red tub, the ESP32 lies at the bottom | 111 x 74 x 42 | PLA or PETG |
-| 4 | `platform.stl` | The floor of the cage, over the ESP32 | 97 x 60 x 3 | PLA or PETG |
-| 5 | `cage_net.stl` | The cage, printed **flat** | 216 x 179 x 3 | PETG (best) or PLA |
+| 3 | `esp_fit_test.stl` | Optional: the ESP32 pocket alone, to check the fit before the tray | 56 x 36 x 11 | PLA or PETG |
+| 4 | `tray.stl` | The red tub, the ESP32 lies at the bottom | 111 x 74 x 42 | PLA or PETG |
+| 5 | `platform.stl` | The floor of the cage, over the ESP32 | 97 x 60 x 3 | PLA or PETG |
+| 6 | `dupont_cover.stl` | Hides the wire sockets behind the wheel | 24 x 16 x 11 | PLA or PETG |
+| 7 | `cage_net.stl` | The cage, printed **flat** | 216 x 179 x 3 | PETG (best) or PLA |
 
 Settings that work: layer height **0.2 mm**, infill **15 %**, **no supports**, 0.4 mm nozzle.
 
@@ -169,35 +171,38 @@ the bottom of the tray.
   faces **down**.
 - The **USB plug** end goes to the **back wall**, where the opening is, and the antenna (the short
   black tongue at the other end) points to the front.
-- Lay it flat into the low **pocket** on the floor. Two dots of hot glue between the edge of the
-  board and the pocket walls keep it there. Keep the glue away from the two small buttons next to
-  the USB socket.
+- Press it flat into the low **pocket** on the floor: it is a snug fit that holds it. If your
+  board is loose, add two dots of hot glue between its edge and the pocket walls, away from the
+  two small buttons next to the USB socket.
 
 **2. Put the wheel on the platform.** Set the wheel's foot in its seat on the platform (the flat
-plate). A drop of glue keeps it in place.
+plate). The bottom of the foot is flat: a drop of glue keeps it in place.
 
 **3. Put the screen in the wheel.** Push the screen into the wheel from the **back**, glass first,
 with the tab and its row of pins at the **bottom**. Plug the 7 jumper wires onto the screen's pins
-(use the same wires you tested with, the other end stays free for now). The sockets point straight
-backwards, out of the back of the foot: that is normal, the shavings will hide them. Feed the 7
-free ends down through the hole in the platform, one by one.
+(use the same wires you tested with). The sockets point straight backwards, out of the back of
+the foot: that is normal, a small cover hides them at the end.
 
 **4. Close the wheel.** Push the round **cap** into the back of the wheel, above the sockets. Lock
 it with the 2 small screws, or a drop of glue. If the screen rattles, a small piece of foam tape
 between the screen and the cap fixes it.
 
-**5. Connect.** Hold the platform above the tray and plug the 7 wires coming through it onto the
-ESP32 pins (table above). Then push the platform down into the tray until it rests on the ledge
-all around: six small ribs on its edge hold it by friction. The wires curl underneath, there is
-room for them. If it is too tight, sand the ribs a little.
+**5. Connect.** Plug the other end of the 7 wires onto the ESP32 pins (table above). Hold the
+platform above the tray and slide the wires into the **slot** behind the wheel, from the back
+edge of the platform: nothing to unplug. Then push the platform down into the tray until it rests
+on the ledge all around: six small ribs on its edge hold it by friction. The wires curl
+underneath, there is room for them. If it is too tight, sand the ribs a little.
 
 **6. Check again.** Plug the USB cable: the hamster must run. (If not, a wire came loose during
-assembly.) To open the toy later, lift the platform by the wheel.
+assembly.) To open the toy later, lift the platform by the wheel: the wires slide out of the slot.
 
-**7. Spread a pinch of shavings on the platform**, up to the rim, around the foot of the wheel and
-over the sockets behind it.
+**7. Put the cover over the sockets** behind the wheel, against the cap. Its two lips drop into the
+slot and hold it.
 
-**8. Fold and place the cage.**
+**8. Spread a pinch of shavings on the platform**, up to the rim, around the foot of the wheel and
+the cover.
+
+**9. Fold and place the cage.**
 - Take the flat cage off the bed.
 - Fold the 4 walls toward the side that was **facing up** while printing, one after the other:
   the thin hinges end up on the outside.
