@@ -107,7 +107,9 @@ The script checks that every part is a closed mesh and that the assembled parts 
   on the platform hides it, the foot of the wheel and the display connectors, so the wheel seems
   to stand in the bedding of the cage. The platform height comes from the ESP32 stack
   (`ESP_UNDER_H` + `ESP_PCB_T` + `DUPONT_H` + `WIRE_BEND`), the rim height from the wheel
-  (`FOOT_H`, `RING_OVER_GROOVE`): the bottom of the ring is about level with the rim.
+  (`FOOT_H`, `RING_OVER_GROOVE`): the bottom of the ring is about level with the rim. The
+  platform has `PLATE_FIT` clearance all around, and six small conical ribs on its edge press
+  `PLATE_GRIP` into the wall for a friction fit (narrow at the bottom, so they also guide it in).
 - **ESP32:** it lies upside down on the floor of the tray, resting on its module and USB-C socket
   (pockets under the EN and BOOT buttons keep them free). It sits in a low pocket: walls along the
   long edges, two posts at the USB end, two stops beside the antenna. Two dots of hot glue hold

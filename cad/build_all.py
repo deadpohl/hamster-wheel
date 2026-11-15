@@ -44,7 +44,7 @@ def print_parts():
 def assembly_parts():
     return {
         "tray": K.tray(),
-        "platform": K.platform(),
+        "platform": K.platform(grip=False),     # the friction ribs overlap the tray on purpose
         "wheel": K.place_wheel(K.wheel()),
         "wheel_cap": K.place_wheel(K.cap()),
         "cage": C.folded(),

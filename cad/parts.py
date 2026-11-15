@@ -205,8 +205,18 @@ def tray():
 
 
 # ----------------------------------------------------------------- platform
-def platform():
+def platform(grip=True):
+    """grip=False leaves out the friction ribs (they overlap the tray on purpose)."""
     p = prism(outline(-PLATE_OFF), PLATE_Z0, PLATE_TOP)
+    # friction fit: small conical ribs on the edge, two on each long side, one on each short
+    # side. Narrow at the bottom, so they guide the platform in, then press into the wall
+    if grip and P.PLATE_GRIP > 0:
+        r = 1.5
+        a = P.TRAY_L / 2 - PLATE_OFF + P.PLATE_FIT + P.PLATE_GRIP - r
+        b = P.TRAY_W / 2 - PLATE_OFF + P.PLATE_FIT + P.PLATE_GRIP - r
+        spots = [(x, s * b) for x in (-P.TRAY_L / 4, P.TRAY_L / 4) for s in (-1, 1)] + [(s * a, 0) for s in (-1, 1)]
+        for x, y in spots:
+            p += Pos(x, y, PLATE_Z0) * Cone(r - 0.4, r, P.PLATE_T, align=CEN)
     seat = box(WHEEL_X - P.FOOT_W / 2 - 0.25, WHEEL_X + P.FOOT_W / 2 + 0.25,
                WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + 0.25, WHEEL_Z, PLATE_TOP + 1)
     # wire hole under the foot and behind it: big enough to pass the Dupont connectors one by one

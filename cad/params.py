@@ -62,6 +62,8 @@ GROOVE_WALL_W = 1.2     # thickness of that inner wall
 # of real wood shavings hides it. It rests on a ledge and lifts out with the wheel.
 PLATE_T = 3.0           # platform thickness
 PLATE_FIT = 0.2         # clearance around the platform, per side
+PLATE_GRIP = 0.15       # six small ribs on the platform edge press this far into the wall: a friction fit
+                        # (too tight: sand the ribs or lower it, too loose: raise it, 0 = no ribs)
 LEDGE_W = 1.5           # how far the ledge under the platform reaches in
 RING_OVER_GROOVE = 3.8  # bottom of the wheel ring above the floor of the cage groove (3.8 keeps the
                         # cage height of the first version, an already printed cage still fits)

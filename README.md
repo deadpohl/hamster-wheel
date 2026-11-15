@@ -187,8 +187,9 @@ it with the 2 small screws, or a drop of glue. If the screen rattles, a small pi
 between the screen and the cap fixes it.
 
 **5. Connect.** Hold the platform above the tray and plug the 7 wires coming through it onto the
-ESP32 pins (table above). Then lower the platform into the tray: it rests on a ledge all around,
-the wires curl underneath. There is room for them.
+ESP32 pins (table above). Then push the platform down into the tray until it rests on the ledge
+all around: six small ribs on its edge hold it by friction. The wires curl underneath, there is
+room for them. If it is too tight, sand the ribs a little.
 
 **6. Check again.** Plug the USB cable: the hamster must run. (If not, a wire came loose during
 assembly.) To open the toy later, lift the platform by the wheel.
