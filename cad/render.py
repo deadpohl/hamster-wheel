@@ -14,10 +14,9 @@ from build123d import Pos, export_stl
 
 COLORS = {
     "tray": (205, 52, 46),
-    "lid": (218, 186, 138),
+    "platform": (218, 186, 138),
     "wheel": (244, 204, 32),
     "wheel_cap": (222, 170, 22),
-    "wheel_cover": (200, 150, 20),
     "cage": (118, 158, 190),
     "esp32": (30, 130, 80),
     "display": (40, 40, 48),
@@ -108,16 +107,16 @@ def make_previews(asm, ghosts, print_parts, out_dir):
             items.append((m, COLORS[n]))
         return items
 
-    render(lay(["tray", "lid", "wheel", "wheel_cap", "wheel_cover", "cage"]), az=-32, el=20).save(
+    render(lay(["tray", "platform", "wheel", "wheel_cap", "cage"]), az=-32, el=20).save(
         out_dir / "assembly.jpg", quality=90)
-    render(lay(["tray", "lid", "wheel", "wheel_cap", "wheel_cover", "cage"],
-               {"lid": (0, 0, 30), "wheel": (0, 0, 40), "wheel_cap": (0, 32, 40), "wheel_cover": (0, 38, 40), "cage": (0, 0, 110)}),
+    render(lay(["tray", "platform", "wheel", "wheel_cap", "cage"],
+               {"platform": (0, 0, 35), "wheel": (0, 0, 50), "wheel_cap": (0, 32, 50), "cage": (0, 0, 145)}),
            az=-32, el=22, size=(1000, 1100)).save(out_dir / "exploded.jpg", quality=90)
     render(lay(["tray"], extra=["esp32"]), az=-25, el=48, size=(1000, 760)).save(
         out_dir / "tray_inside.jpg", quality=90)
     render([(to_mesh(print_parts["cage_net"]), COLORS["cage"])], az=0, el=90, size=(1100, 950)).save(
         out_dir / "cage_net.jpg", quality=90)
-    off = {"wheel_cap": (0, 30, 0), "wheel_cover": (0, 52, 0), "display": (0, 14, 0)}
-    render(lay(["wheel", "wheel_cap", "wheel_cover"], off, extra=["display"]), az=145, el=18, size=(1000, 760)).save(
+    off = {"wheel_cap": (0, 30, 0), "display": (0, 14, 0)}
+    render(lay(["wheel", "wheel_cap"], off, extra=["display"]), az=145, el=18, size=(1000, 760)).save(
         out_dir / "wheel_exploded.jpg", quality=90)
 

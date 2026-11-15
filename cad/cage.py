@@ -1,13 +1,13 @@
-"""The cage: printed flat as one net, folded into a cage that plugs into the lid.
+"""The cage: printed flat as one net, folded into a cage that plugs into the tray.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
 The net is a roof in the middle with one wall panel around each of its edges,
 joined by thin living hinges. Everything is printed with the OUTER faces on the
 bed (no supports). Fold the walls up 90 degrees and push their solid skirts into
-the groove that runs around the rim of the lid: the groove holds every panel in
+the groove that runs around the rim of the tray: the groove holds every panel in
 place, so the mitred corners close without glue, and a small bump on each wall
-clicks into a dimple of the lid rim.
+clicks into a dimple of the tray rim.
 
 Panel frame (used for the flat net and for the folded cage):
   X = along the edge, Y = h, distance from the roof (0 at the top, HW at the skirt),
@@ -27,10 +27,10 @@ FILM = P.HINGE_FILM
 # When a wall is folded 90 degrees the film bends into a small arc: the outer face of the
 # wall ends up RHO outside the edge of the roof, and its top starts RHO below the roof.
 # So the roof is made RHO smaller than the groove outline, and the walls RHO shorter, so
-# that the bottom of the folded walls lands exactly in the groove of the lid.
+# that the bottom of the folded walls lands exactly in the groove of the tray.
 RHO = P.FOLD_OFFSET if P.FOLD_OFFSET is not None else 2 * P.HINGE_W / pi + FILM / 2
 ROOF_OFF = K.CAGE_OFF + RHO                  # roof outline: offset inward from the tray outline
-HW = CAGE_TOP - K.TRAY_H - RHO               # wall height: from the hinge to the groove floor
+HW = CAGE_TOP - K.GROOVE_Z - RHO             # wall height: from the hinge to the groove floor
 
 
 def _fuse(shapes):
@@ -88,7 +88,7 @@ def wall_panel(length, beta_tan):
         body -= window - _fuse(bars) if bars else window
 
     # snap bump on the inner face of the skirt (fits the groove in the tray wall)
-    if length > 10:                          # same rule as the dimples of the lid
+    if length > 10:                          # same rule as the dimples of the tray
         # tall enough to cross the clearance of the groove and still reach into the dimple
         body += Pos(0, HW - 2.5, T - 0.1) * Cone(P.BUMP_R + 0.3, P.BUMP_R - 0.2, P.CAGE_FIT + 0.6,
                                                     align=(Align.CENTER, Align.CENTER, Align.MIN))

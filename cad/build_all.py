@@ -34,10 +34,9 @@ def print_parts():
     """Each part in its print orientation (no support needed)."""
     return {
         "tray": to_bed(K.tray()),                       # floor on the bed
-        "lid": to_bed(K.lid()),                         # top side up
+        "platform": to_bed(K.platform()),               # top side up
         "wheel": to_bed(Rot(X=90) * K.wheel()),         # front face on the bed
         "wheel_cap": to_bed(Rot(X=-90) * K.cap()),      # flange on the bed
-        "wheel_cover": to_bed(Rot(X=180) * K.wheel_cover()),  # roof of the cover on the bed
         "cage_net": to_bed(C.net()),                    # flat net, outer faces on the bed
     }
 
@@ -45,10 +44,9 @@ def print_parts():
 def assembly_parts():
     return {
         "tray": K.tray(),
-        "lid": K.lid(),
+        "platform": K.platform(),
         "wheel": K.place_wheel(K.wheel()),
         "wheel_cap": K.place_wheel(K.cap()),
-        "wheel_cover": K.place_wheel(K.wheel_cover()),
         "cage": C.folded(),
     }
 

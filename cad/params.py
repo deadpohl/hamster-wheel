@@ -10,8 +10,8 @@
 # ---------------------------------------------------------------- display
 # GC9A01 1.28" round module, 7 pin version (VCC GND SCL SDA DC CS RST).
 # The PCB is a disc with a tab at the bottom that carries the pins. The pins stick out
-# of the BACK of the tab, so the Dupont connectors point straight backwards: the wheel
-# has a bay behind the PCB for them, the wires then go down into the tray.
+# of the BACK of the tab, so the Dupont connectors point straight backwards, out of the
+# back of the wheel foot. The wires then go down through a hole in the platform.
 LCD_PCB_D = 38.0        # measure me: diameter of the round part of the PCB
 LCD_H_TOTAL = 45.0      # measure me: from the top of the disc to the bottom edge of the tab
 LCD_TAB_W = 24.0        # measure me: width of the tab (the pocket is cut this wide, a bit more is fine)
@@ -22,13 +22,13 @@ LCD_GLASS_T = 1.8       # measure me: glass height above the PCB
 LCD_REAR_SPACE = 6.0    # room behind the PCB inside the ring
 LCD_CONN_LEN = 16.5     # measure me: Dupont housing + header plastic, behind the PCB
 LCD_PIN_Z = 1.5         # measure me: height of the pin row above the bottom edge of the tab
-BAY_W = 36.0            # width of the wire bay behind the display
+BAY_W = 25.0            # width of the bay behind the display, where the connectors leave the wheel
 WIRE_BEND_LCD = 6.0     # room behind the display connectors for the wires to bend down
 
 # ------------------------------------------------------------------ ESP32
-# 38 pin DevKit style board. It lies UPSIDE DOWN in the tray: pins up, resting on its
-# module and USB-C socket, in a pocket. The antenna end goes in first, under two rigid
-# hooks, then the USB end is laid down. The Dupont connectors and wires stay inside the tray.
+# 38 pin DevKit style board. It lies UPSIDE DOWN on the floor of the tray: pins up, resting
+# on its module and USB-C socket, in a low pocket. Two dots of hot glue hold it. The Dupont
+# connectors and the wires stay under the platform.
 ESP_L = 48.0            # measure me: PCB length, WITHOUT the antenna
 ESP_W = 28.0            # measure me: PCB width
 ESP_ANT_L = 6.0         # measure me: how far the antenna sticks out past the end of the PCB
@@ -41,8 +41,6 @@ WIRE_BEND = 8.0         # room above the Dupont connectors for the wires to bend
 USB_NOSE = 1.5          # measure me: how far the USB-C socket sticks out past the end of the PCB
 USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a big moulded end)
 ESP_GAP = 0.3           # clearance around the PCB in its pocket
-ESP_STOP_GAP = 0.8      # room between the antenna end of the PCB and its stops, to tilt the board in
-ESP_HOOK = 2.1          # how far the two hooks on those stops reach (from the stop face)
 
 # ------------------------------------------------------------------- tray
 TRAY_L = 90.0           # outer size along X
@@ -50,33 +48,37 @@ TRAY_W = 68.0           # outer size along Y, front to back (room for the wheel 
 CORNER_CUT = 8.0        # 45 degree chamfer on the four vertical corners (0 = square corners)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
-BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front, the wires leave at the back)
+BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front)
 WHEEL_X = 0.0           # wheel position along X (0 = centred)
+# The top of the tray is the groove for the cage: the tray wall is its outer side, a thin
+# inner wall is the other side.
+GROOVE_WALL_H = 7.0     # height of the inner wall of the groove (the tray wall is 2 mm lower: it guides the cage in)
+GROOVE_WALL_W = 1.2     # thickness of that inner wall
 
-# -------------------------------------------------------------------- lid
-LID_T = 3.0             # lid plate thickness (also the depth of the seat in the tray)
-LID_FIT = 0.2           # clearance between lid and tray seat, per side
-LID_BORDER_H = 7.0      # height of the raised rim of the lid (the cage plugs into a groove in it)
-LID_RIM_W = 1.2         # thickness of the two thin walls of the rim, the cage goes between them
-SEAT_W = 1.4            # how far the seat steps in from the inner wall face
+# --------------------------------------------------------------- platform
+# A flat plate over the ESP32, below the rim of the tray. The wheel stands on it and a pinch
+# of real wood shavings hides it. It rests on a ledge and lifts out with the wheel.
+PLATE_T = 3.0           # platform thickness
+PLATE_FIT = 0.2         # clearance around the platform, per side
+LEDGE_W = 1.5           # how far the ledge under the platform reaches in
+RING_OVER_GROOVE = 3.8  # bottom of the wheel ring above the floor of the cage groove (3.8 keeps the
+                        # cage height of the first version, an already printed cage still fits)
 
 # ------------------------------------------------------------------ wheel
 WHEEL_D = 48.0          # outer diameter of the wheel housing
 WHEEL_TUBE = 6.0        # depth of the "tunnel" in front of the screen
 WHEEL_WINDOW_D = LCD_ACTIVE_D + 1.0
 WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the picture
-FOOT_H = 5.0            # height of the foot below the ring
-FOOT_W = 50.0
+FOOT_H = 7.0            # height of the straight foot below the ring (it stands in the shavings)
+FOOT_W = 30.0           # foot width, a little more than the display tab
 FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
 CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
 CAP_PRESS = 0.15        # radial clearance of the cap plug in the PCB pocket
-COVER_H = 14.0          # inner height of the cover over the display connectors
-COVER_WALL = 2.0
 
 # ------------------------------------------------------------------- cage
 # Printed flat as one "net": the roof in the middle and one wall around each of
-# its edges, joined by thin living hinges. Fold the walls up and plug them into the groove of the lid.
+# its edges, joined by thin living hinges. Fold the walls up and plug them into the groove of the tray.
 CAGE_T = 2.0            # thickness of every cage panel
 BAR_W = 1.6             # bar width
 WALL_PITCH = 11.0       # vertical bar spacing on the walls (large: you must see the wheel)
@@ -84,7 +86,7 @@ BELT_POS = 0.5           # height of the horizontal bar, all around: 0 = right u
 ROOF_PITCH = 14.0       # bar spacing on the roof
 POST_W = 4.0            # solid post at each vertical edge of a wall
 RAIL_W = 3.5            # solid top rail of the walls and border of the roof
-RIM_H = 8.0             # solid skirt at the bottom of the walls, plugs into the groove of the lid
+RIM_H = 8.0             # solid skirt at the bottom of the walls, plugs into the groove of the tray
 CAGE_FIT = 0.5          # clearance on each side of the skirt in the groove (the folded cage is floppy)
 LEAD_IN = 0.6           # chamfer that guides the walls into the groove (mouth of the groove, skirt edge)
 ROOF_GAP = 3.0          # free space between the wheel top and the cage roof
@@ -94,6 +96,6 @@ HINGE_W = 1.6           # width of the hinge film (longer and thinner = less str
 FOLD_OFFSET = None       # how far a folded wall stands outside the edge of the roof (the bend of the hinge).
                         # None = computed from the hinge. If your folded cage does not drop into the groove,
                         # measure the real offset and set it here: the roof is sized from it
-BUMP_R = 0.6            # snap bump on each wall (clicks into a dimple in the lid rim)
+BUMP_R = 0.6            # snap bump on each wall (clicks into a dimple in the tray rim)
 DIMPLE_D = 0.6          # depth of that dimple
 

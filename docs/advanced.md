@@ -101,25 +101,25 @@ The script checks that every part is a closed mesh and that the assembled parts 
 
 ### How the parts work together
 
-- **ESP32:** it lies upside down in the front half of the tray, resting on its module and USB-C
-  socket (pockets under the EN and BOOT buttons keep them free). It sits in a pocket: low walls
-  along the long edges, two posts at the USB end, two stops beside the antenna. The stops are
-  `ESP_STOP_GAP` away from the PCB end and carry rigid hooks (`ESP_HOOK`) over it, in the narrow
-  strip between the antenna and the header plastic. The board goes in tilted, antenna end first:
-  it pivots on its module, which sits right under the PCB end, so that end moves toward the
-  stops without rising and slips under the hooks. Nothing bends: the header plastic covers the
-  long edges, and two flexing snap designs failed in test prints (fragile, hard to insert).
-  Pushing or pulling the USB plug presses the board down, never up. Double-sided foam tape under
-  the module is the optional permanent hold. The tray is deep enough for the Dupont connectors
-  and the wires (`DUPONT_H` + `WIRE_BEND` above the PCB).
+- **Layout:** the tray is an open tub. The ESP32 lies on its floor; a flat platform rests on a
+  ledge above it, below the rim, and the wheel stands on the platform. A pinch of real shavings
+  on the platform hides it, the foot of the wheel and the display connectors, so the wheel seems
+  to stand in the bedding of the cage. The platform height comes from the ESP32 stack
+  (`ESP_UNDER_H` + `ESP_PCB_T` + `DUPONT_H` + `WIRE_BEND`), the rim height from the wheel
+  (`FOOT_H`, `RING_OVER_GROOVE`): the bottom of the ring is about level with the rim.
+- **ESP32:** it lies upside down on the floor of the tray, resting on its module and USB-C socket
+  (pockets under the EN and BOOT buttons keep them free). It sits in a low pocket: walls along the
+  long edges, two posts at the USB end, two stops beside the antenna. Two dots of hot glue hold
+  it. Nothing clips: the header plastic covers the long edges, and flexing snaps and hooks failed
+  or were fiddly in test prints. Pushing or pulling the USB plug presses the board down, never up.
 - **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
-  glass seat and is open down to the bottom of the foot. The header pins point straight back from
-  the tab, so the connectors need about 16.5 mm behind it: the wheel has a bay for them, the wires
-  go down through a hole in the lid, behind the ESP32, and a cover hides the bay. The cap is cut
-  flat at the top of the cover (`COVER_H` + `COVER_WALL`): the bottom stays open for the tab, and
-  the cap rests on the cover and holds it down.
+  glass seat and is open down to the bottom of the straight foot. The header pins point straight
+  back from the tab, so the connectors (about 16.5 mm) stick out of the back of the foot, right at
+  the shavings level. The wires go down through a hole in the platform. The cap is cut flat just
+  above the connectors.
 - **Cage:** one flat net (roof in the middle, 8 walls around, joined by living hinges) that folds
-  and plugs into a groove all around the rim of the lid. The roof is a little **smaller** than the
+  and plugs into a groove all around the rim of the tray: the tray wall is its outer side, a thin
+  inner wall the other side. The roof is a little **smaller** than the
   groove on purpose: when a wall is folded, the hinge bends into a small arc, so the wall ends up
   about 1.2 mm outside the roof edge. The net already compensates (`FOLD_OFFSET`, computed from
   the hinge). If your folded cage does not drop into the groove, measure how far the folded wall

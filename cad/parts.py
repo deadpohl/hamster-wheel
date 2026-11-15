@@ -1,4 +1,4 @@
-"""Parametric parts of the hamster wheel desk toy (build123d): tray, lid, wheel, cap, cover.
+"""Parametric parts of the hamster wheel desk toy (build123d): tray, platform, wheel, cap.
 
 Author: DeadPohl  https://www.instagram.com/_deadpohl_
 
@@ -7,13 +7,14 @@ Every builder returns a solid in ASSEMBLY coordinates unless noted:
   origin = centre of the tray footprint, Z = 0 on the table.
 build_all.py reorients each part for printing. The cage lives in cage.py.
 
-How the wiring is laid out (plain Dupont jumper wires, no soldering):
-  * the ESP32 lies upside down in the front half of the tray, pins up, resting on its
-    module and USB-C socket. It drops into a pocket, no clips. The tray is deep enough
-    for the Dupont connectors and the wires to stay inside;
-  * the display connectors point straight back from the tab of the PCB, into a bay in
-    the foot of the wheel. The wires go down through a hole in the lid, behind the
-    ESP32. A cover hides the bay, the cap is cut flat at the bottom and rests on it.
+How it is laid out (plain Dupont jumper wires, no soldering):
+  * the tray is an open tub. Its top is the groove the cage plugs into;
+  * the ESP32 lies upside down on the floor of the tray, pins up, resting on its module
+    and USB-C socket, in a low pocket. Two dots of hot glue hold it;
+  * a flat platform rests on a ledge above the ESP32 and its Dupont connectors, below the
+    rim. The wheel stands on it, and a pinch of real wood shavings hides it;
+  * the display connectors point straight back out of the wheel foot, in the shavings.
+    The wires go down through a hole in the platform.
 """
 from math import hypot
 
@@ -28,8 +29,8 @@ SQ = 2 - 2 ** 0.5   # change of a 45 degree chamfer per mm of outline offset
 # ------------------------------------------------------------ derived values
 BOARD_BOT = P.FLOOR + P.ESP_UNDER_H               # underside of the ESP32 PCB (it faces down)
 BOARD_TOP = BOARD_BOT + P.ESP_PCB_T               # pin side of the PCB
-SEAT_Z = BOARD_TOP + P.DUPONT_H + P.WIRE_BEND     # underside of the lid
-TRAY_H = SEAT_Z + P.LID_T
+PLATE_Z0 = BOARD_TOP + P.DUPONT_H + P.WIRE_BEND   # underside of the platform
+PLATE_TOP = PLATE_Z0 + P.PLATE_T
 INNER_L = P.TRAY_L - 2 * P.WALL
 INNER_W = P.TRAY_W - 2 * P.WALL
 # USB end of the PCB (left): the USB-C socket nose ends just inside the wall
@@ -38,7 +39,7 @@ BOARD_X1 = BOARD_X0 + P.ESP_L                     # antenna end (right), the ant
 BOARD_YC = P.BOARD_Y
 ROW_DY = 12.7                                     # pin rows, from the board centre line (25.4 apart)
 
-# wheel housing: tunnel, glass, PCB, then the bay for the Dupont connectors
+# wheel housing: tunnel, glass, PCB, then room behind the PCB
 Y_GLASS = P.WHEEL_TUBE
 Y_PCB = Y_GLASS + P.LCD_GLASS_T
 Y_BACK = Y_PCB + P.LCD_PCB_T                      # back face of the display PCB
@@ -49,27 +50,29 @@ TAB_BOT = H_CENTER + P.LCD_PCB_D / 2 - P.LCD_H_TOTAL   # bottom edge of the disp
 PIN_Z = TAB_BOT + P.LCD_PIN_Z                     # display pin row
 if TAB_BOT < 1.5:
     raise ValueError("the display tab goes below the foot of the wheel: increase FOOT_H")
-POCKET_D = 1.2                                    # depth of the foot seat in the lid
-WHEEL_Z = TRAY_H - POCKET_D                       # assembly Z of the foot base
-BAY_TOP = PIN_Z + 1.27 + 3.0                      # height of the bay in the foot
-COVER_Y0 = WHEEL_DEPTH                            # the cover goes under the cap, against the wheel
-COVER_Y1 = Y_BACK + P.LCD_CONN_LEN + P.WIRE_BEND_LCD
-COVER_TOP = P.COVER_H + P.COVER_WALL              # the flat bottom of the cap rests on it
-if P.COVER_H < BAY_TOP:
-    raise ValueError("COVER_H is lower than the display connectors: increase it")
-COVER_HW = P.BAY_W / 2 + P.COVER_WALL             # half width of the cover (outside)
+POCKET_D = 1.2                                    # depth of the foot seat in the platform
+WHEEL_Z = PLATE_TOP - POCKET_D                    # assembly Z of the foot base
+BAY_TOP = PIN_Z + 1.27 + 3.0                      # height of the bay behind the display PCB
+CAP_CUT = PIN_Z + 1.27 + 0.5                      # the cap is cut flat here, over the display connectors
+HOLE_Y1 = Y_BACK + P.LCD_CONN_LEN + P.WIRE_BEND_LCD   # back end of the wire hole (wheel frame)
 WHEEL_X = P.WHEEL_X
+# the wheel and its wire hole are centred front to back
+WHEEL_Y = -HOLE_Y1 / 2
 
-# Lid rim: two thin walls with a groove between them, the cage walls plug into it.
-# Offsets are distances inward from the tray outline.
-LID_OFF = P.WALL - P.SEAT_W + P.LID_FIT           # outer face of the lid
-GROOVE_W = P.CAGE_T + 2 * P.CAGE_FIT              # groove width
-CAGE_OFF = LID_OFF + P.LID_RIM_W + P.CAGE_FIT     # outer face of the cage walls
-GROOVE_IN_OFF = LID_OFF + P.LID_RIM_W + GROOVE_W  # inner face of the groove (outer face of the inner wall)
-RIM_IN_OFF = GROOVE_IN_OFF + P.LID_RIM_W          # inner face of the inner wall
-OUTER_WALL_H = P.LID_BORDER_H - 2.0               # lower outer wall: easier to guide the cage in
-# the wheel stands as far back as the rim allows, so the wire hole is behind the ESP32
-WHEEL_Y = P.TRAY_W / 2 - RIM_IN_OFF - 0.6 - (COVER_Y1 + P.COVER_WALL + 0.25)
+# Rim: the tray wall is the outer side of the cage groove, a thin inner wall the other side.
+# Under the groove a solid band holds that inner wall; under the band a ledge carries the
+# platform. Offsets are distances inward from the tray outline.
+GROOVE_Z = WHEEL_Z + P.FOOT_H - P.RING_OVER_GROOVE   # floor of the cage groove
+RIM_Z = GROOVE_Z + P.GROOVE_WALL_H                   # top of the inner wall
+TRAY_H = RIM_Z - 2.0                                 # top of the tray wall: lower, it guides the cage in
+GROOVE_W = P.CAGE_T + 2 * P.CAGE_FIT
+CAGE_OFF = P.WALL + P.CAGE_FIT                       # outer face of the cage walls
+GROOVE_IN_OFF = P.WALL + GROOVE_W                    # inner face of the groove
+RIM_IN_OFF = GROOVE_IN_OFF + P.GROOVE_WALL_W         # inner face of the inner wall and of the band
+PLATE_OFF = RIM_IN_OFF + P.PLATE_FIT                 # edge of the platform
+LEDGE_OFF = PLATE_OFF + P.LEDGE_W                    # inner edge of the ledge
+if GROOVE_Z < PLATE_TOP + 0.5:
+    raise ValueError("the cage groove would be below the platform: increase FOOT_H")
 
 
 # ------------------------------------------------------------------ helpers
@@ -113,6 +116,11 @@ def prism(pts, z0, z1):
     return Pos(0, 0, (z0 + z1) / 2) * extrude(Polygon(*pts, align=None), amount=(z1 - z0) / 2, both=True)
 
 
+def tapered(pts, z0, h, taper):
+    """Extrusion of an outline from z0 up by h, its sides at `taper` degrees (positive = shrinks)."""
+    return Pos(0, 0, z0) * extrude(Polygon(*pts[::-1], align=None), amount=h, taper=taper)
+
+
 def edges(pts):
     """Yield (midpoint, unit tangent, outward normal, length) of each edge of a clockwise polygon."""
     for i, p in enumerate(pts):
@@ -124,17 +132,33 @@ def edges(pts):
 
 # --------------------------------------------------------------------- tray
 def tray():
-    t = prism(outline(0), 0, TRAY_H)
-    cavity = prism(outline(-P.WALL), P.FLOOR, TRAY_H + 1)
-    t -= cavity
-    # seat for the lid: the opening widens by SEAT_W in the top LID_T millimetres
-    t -= prism(outline(-(P.WALL - P.SEAT_W)), SEAT_Z, TRAY_H + 1)
+    c = P.LEAD_IN
+    t = prism(outline(0), 0, TRAY_H) - prism(outline(-P.WALL), P.FLOOR, TRAY_H + 1)
+    # lead-in: the groove side of the wall is chamfered at the top
+    t -= tapered(outline(-P.WALL), TRAY_H - c, c + 0.01, -45)
 
-    # ESP32 upside down, resting on its module and USB-C socket. It simply drops into a pocket:
-    # nothing flexes, nothing clips (the header plastic covers the long edges, so there is
-    # nothing to clip on anyway). The pocket stops it in X and Y, which is all the USB cable
-    # needs: pushing or pulling the plug presses the board down, never up. A square of
-    # double-sided foam tape under the module holds it for good if wanted.
+    # band under the groove: its inner face surrounds the platform, its bottom is the ledge
+    # the platform rests on, with a 45 degree chamfer under it (prints without support)
+    h = LEDGE_OFF - P.WALL
+    zb = PLATE_Z0 - h
+    band = prism(outline(-P.WALL + 0.2), zb, GROOVE_Z)
+    band -= prism(outline(-RIM_IN_OFF), PLATE_Z0, GROOVE_Z + 1)
+    band -= tapered(outline(-P.WALL + 0.2), zb - 0.2, h + 0.2 + 0.01, 45)
+    # inner wall of the groove, chamfered at the top on the groove side
+    inner = prism(outline(-GROOVE_IN_OFF), GROOVE_Z - 0.1, RIM_Z - c) \
+        + tapered(outline(-GROOVE_IN_OFF), RIM_Z - c, c, 45)
+    inner -= prism(outline(-RIM_IN_OFF), GROOVE_Z - 1, RIM_Z + 1)
+    t += band + inner
+
+    # one dimple per wall, where the snap bump of the cage clicks in
+    for (mx, my), (tx, ty), (nx, ny), ln in edges(outline(-GROOVE_IN_OFF)):
+        if ln > 10:
+            pl = Plane(origin=(mx, my, GROOVE_Z + 2.5), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
+            t -= Location(pl) * (Pos(0, 0, -0.1) * Cone(
+                P.BUMP_R + 0.6, P.BUMP_R + 0.1, P.DIMPLE_D + 0.2, align=CEN))
+
+    # ESP32 upside down, resting on its module and USB-C socket, in a low pocket that stops
+    # it in X and Y. Nothing clips: two dots of hot glue on the walls hold it.
     yc, x0, x1 = BOARD_YC, BOARD_X0, BOARD_X1
     hw = P.ESP_W / 2
     zt = BOARD_TOP
@@ -152,22 +176,13 @@ def tray():
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
         feats.append(box(-INNER_L / 2 - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
-    # antenna end: two stops beside the antenna, ESP_STOP_GAP away from the PCB end. They stay
-    # below the PCB top where the pin headers stick out a little past the PCB. Between the
-    # antenna and the headers, each stop rises into a rigid hook over the PCB end. The board
-    # goes in tilted, antenna end first under the hooks, then the USB end is laid down: it
-    # pivots on its module, which sits right under the PCB end, so the PCB end moves toward
-    # the stops without rising (hence the gap) and nothing has to bend.
-    xs = x1 + P.ESP_STOP_GAP                    # face of the stops
-    ah = P.ESP_ANT_W / 2 + 0.6                  # clear of the antenna
-    hh = hw - 2.55                              # clear of the header plastic (inner edge at hw - 2.54)
-    hz0 = zt + 0.4                              # underside of the hooks
+    # antenna end: two stops beside the antenna, below the PCB top (the pin headers stick
+    # out a little past the PCB end)
+    xs = x1 + g
+    ah = P.ESP_ANT_W / 2 + 0.6
     for s in (-1, 1):
         a, b = yc + s * ah, yc + s * (hw + g + 1.4)
         feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
-        a, b = yc + s * ah, yc + s * (hh - 0.3)
-        feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, hz0 + 1.0))
-        feats.append(box(xs - P.ESP_HOOK, xs, min(a, b), max(a, b), hz0, hz0 + 1.0))
 
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
     t += fuse_all(feats) & keep
@@ -183,63 +198,28 @@ def tray():
     return t
 
 
-# ---------------------------------------------------------------------- lid
-def lid():
-    plate = prism(outline(-LID_OFF), SEAT_Z, TRAY_H)
-    # rim: a low outer wall and a tall inner wall, with the cage groove between them
-    c = P.LEAD_IN
-    outer = prism(outline(-LID_OFF), TRAY_H, TRAY_H + OUTER_WALL_H) \
-        - prism(outline(-LID_OFF - P.LID_RIM_W), TRAY_H - 1, TRAY_H + OUTER_WALL_H + 1)
-    # lead-in: the groove side of each wall is chamfered at the top, so the mouth is wider
-    outer -= Pos(0, 0, TRAY_H + OUTER_WALL_H - c) * extrude(
-        Polygon(*outline(-LID_OFF - P.LID_RIM_W)[::-1], align=None), amount=c + 0.01, taper=-45)
-    inner = prism(outline(-GROOVE_IN_OFF), TRAY_H, TRAY_H + P.LID_BORDER_H - c) \
-        + Pos(0, 0, TRAY_H + P.LID_BORDER_H - c) * extrude(
-            Polygon(*outline(-GROOVE_IN_OFF)[::-1], align=None), amount=c, taper=45)
-    inner -= prism(outline(-RIM_IN_OFF), TRAY_H - 1, TRAY_H + P.LID_BORDER_H + 1)
-    lid_ = plate + outer + inner
-
-    # one dimple per wall, where the snap bump of the cage clicks in
-    pts = outline(-GROOVE_IN_OFF)
-    for (mx, my), (tx, ty), (nx, ny), ln in edges(pts):
-        if ln > 10:
-            pl = Plane(origin=(mx, my, TRAY_H + 2.5), x_dir=(tx, ty, 0), z_dir=(-nx, -ny, 0))
-            lid_ -= Location(pl) * (Pos(0, 0, -0.1) * Cone(
-                P.BUMP_R + 0.6, P.BUMP_R + 0.1, P.DIMPLE_D + 0.2, align=CEN))
-
-    # seats for the wheel foot and for the connector cover
-    pz0 = TRAY_H - POCKET_D
-    foot = box(WHEEL_X - P.FOOT_W / 2 - 0.25, WHEEL_X + P.FOOT_W / 2 + 0.25,
-               WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + 0.25, pz0, TRAY_H + 1)
-    cover = box(WHEEL_X - COVER_HW - 0.25, WHEEL_X + COVER_HW + 0.25,
-                WHEEL_Y + COVER_Y0 - 0.25, WHEEL_Y + COVER_Y1 + P.COVER_WALL + 0.25, pz0, TRAY_H + 1)
-    if vol((foot + cover) & inner) > 0.1:
-        raise ValueError("the wheel does not fit inside the lid rim: increase TRAY_L / TRAY_W "
-                         "or move the ESP32 (BOARD_Y)")
-    lid_ -= foot + cover
-    # wire hole under the bay and the cover, behind the ESP32: big enough to pass the
-    # Dupont connectors one by one
-    lid_ -= box(WHEEL_X - P.BAY_W / 2 + 2, WHEEL_X + P.BAY_W / 2 - 2, WHEEL_Y + Y_BACK + 0.5,
-                WHEEL_Y + COVER_Y1 - 0.5, SEAT_Z - 1, TRAY_H + 1)
-    return lid_
+# ----------------------------------------------------------------- platform
+def platform():
+    p = prism(outline(-PLATE_OFF), PLATE_Z0, PLATE_TOP)
+    seat = box(WHEEL_X - P.FOOT_W / 2 - 0.25, WHEEL_X + P.FOOT_W / 2 + 0.25,
+               WHEEL_Y - 0.25, WHEEL_Y + WHEEL_DEPTH + 0.25, WHEEL_Z, PLATE_TOP + 1)
+    # wire hole under the foot and behind it: big enough to pass the Dupont connectors one by one
+    hole = box(WHEEL_X - 10, WHEEL_X + 10, WHEEL_Y + Y_BACK + 0.5, WHEEL_Y + HOLE_Y1,
+               PLATE_Z0 - 1, PLATE_TOP + 1)
+    if vol((seat + hole) - prism(outline(-PLATE_OFF - 2.0), PLATE_Z0 - 2, PLATE_TOP + 2)) > 0.1:
+        raise ValueError("the wheel does not fit on the platform: increase TRAY_L / TRAY_W")
+    return p - seat - hole
 
 
 # -------------------------------------------------------------------- wheel
-def _foot_prism():
-    """Trapezoid foot, extruded along +Y over the full housing depth."""
-    fw = P.FOOT_W / 2
-    top = P.WHEEL_D / 2 * 0.8
-    prof = Plane.XZ * Polygon((-fw, 0), (fw, 0), (top, H_CENTER), (-top, H_CENTER), align=None)
-    return extrude(prof, amount=-WHEEL_DEPTH)
-
-
 def _screw_r():
     return (P.WHEEL_D / 2 + (P.LCD_PCB_D / 2 + P.FIT)) / 2
 
 
 def wheel():
-    """Ring housing and foot, in WHEEL coordinates (X centred, Y front=0, Z base=0)."""
-    body = cyl_y(P.WHEEL_D, 0, WHEEL_DEPTH, z=H_CENTER) + _foot_prism()
+    """Ring housing and straight foot, in WHEEL coordinates (X centred, Y front=0, Z base=0)."""
+    fw = P.FOOT_W / 2
+    body = cyl_y(P.WHEEL_D, 0, WHEEL_DEPTH, z=H_CENTER) + box(-fw, fw, 0, WHEEL_DEPTH, 0, H_CENTER)
     # window, glass seat, PCB seat
     body -= cyl_y(P.WHEEL_WINDOW_D, -1, Y_GLASS + 1, z=H_CENTER)
     body -= Pos(0, 0, H_CENTER) * (Rot(X=-90) * Cone(
@@ -251,7 +231,7 @@ def wheel():
     # bottom of the foot (no thin ledge under it)
     tw = P.LCD_TAB_W / 2 + P.FIT
     body -= box(-tw, tw, Y_GLASS, WHEEL_DEPTH + 1, -1, H_CENTER)
-    # bay behind the PCB: the Dupont connectors point straight back, the wires go down
+    # bay behind the PCB: the Dupont connectors point straight back, out of the foot
     body -= box(-P.BAY_W / 2, P.BAY_W / 2, Y_BACK, WHEEL_DEPTH + 1, -1, BAY_TOP)
     if P.CAP_SCREWS:
         for s in (-1, 1):
@@ -266,23 +246,15 @@ def cap():
     boss = cyl_y(P.LCD_PCB_D + 2 * P.FIT - 2 * P.CAP_PRESS, Y_BACK, WHEEL_DEPTH, z=zc)
     boss -= cyl_y(P.LCD_PCB_D - 8, Y_BACK - 1, WHEEL_DEPTH + 1, z=zc)
     c = flange + boss
-    # the flange is cut flat at the bottom and rests on the top of the connector cover. The
-    # boss is cut away in front of the tab up to the centre, the same slot as in the wheel:
-    # it only presses on the round part of the PCB, beside and above the tab
-    c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, COVER_TOP)
+    # cut flat just above the display connectors, which leave under it. The boss is cut away
+    # in front of the tab up to the centre, the same slot as in the wheel: it only presses on
+    # the round part of the PCB, beside and above the tab
+    c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, CAP_CUT)
     tw = P.LCD_TAB_W / 2 + P.FIT
     c -= box(-tw, tw, Y_BACK - 1, WHEEL_DEPTH, -1, H_CENTER)
     if P.CAP_SCREWS:
         for s in (-1, 1):
             c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
-    return c
-
-
-def wheel_cover():
-    """Cover over the connector bay and the lid slot, in WHEEL coordinates (open at the front and bottom)."""
-    w = P.COVER_WALL
-    c = box(-COVER_HW, COVER_HW, COVER_Y0, COVER_Y1 + w, 0, P.COVER_H + w)
-    c -= box(-P.BAY_W / 2, P.BAY_W / 2, COVER_Y0 - 1, COVER_Y1, -1, P.COVER_H)
     return c
 
 
@@ -327,4 +299,3 @@ def lcd_ghost():
     glass = cyl_y(P.LCD_GLASS_D, Y_GLASS, Y_PCB, z=zc)
     conn = box(-8.9, 8.9, Y_BACK, Y_BACK + P.LCD_CONN_LEN, PIN_Z - 1.27, PIN_Z + 1.27)
     return pcb + glass + conn
-
