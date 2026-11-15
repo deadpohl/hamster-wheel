@@ -112,7 +112,7 @@ def make_previews(asm, ghosts, print_parts, out_dir):
     render(lay(["tray", "platform", "wheel", "wheel_cap", "cage"],
                {"platform": (0, 0, 35), "wheel": (0, 0, 50), "wheel_cap": (0, 32, 50), "cage": (0, 0, 145)}),
            az=-32, el=22, size=(1000, 1100)).save(out_dir / "exploded.jpg", quality=90)
-    render(lay(["tray"], extra=["esp32"]), az=-25, el=48, size=(1000, 760)).save(
+    render(lay(["tray"], extra=["esp32"]), az=-15, el=72, size=(1000, 760)).save(
         out_dir / "tray_inside.jpg", quality=90)
     render([(to_mesh(print_parts["cage_net"]), COLORS["cage"])], az=0, el=90, size=(1100, 950)).save(
         out_dir / "cage_net.jpg", quality=90)
