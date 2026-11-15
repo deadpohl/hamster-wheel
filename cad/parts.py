@@ -17,7 +17,7 @@ How it is laid out (plain Dupont jumper wires, no soldering):
     The wires go down through a slot in the platform, open at its back edge: they slide in
     without unplugging anything.
 """
-from math import atan, degrees, hypot
+from math import atan, cos, degrees, hypot, radians, sin
 
 from build123d import Align, Box, Cone, Cylinder, Location, Plane, Polygon, Pos, Rot, extrude
 
@@ -84,6 +84,8 @@ GROOVE_IN_OFF = TOP_WALL_OFF + GROOVE_W              # inner face of the groove
 RIM_IN_OFF = GROOVE_IN_OFF + P.GROOVE_WALL_W         # inner face of the inner wall and of the band
 PLATE_OFF = RIM_IN_OFF + P.PLATE_FIT                 # edge of the platform
 LEDGE_OFF = PLATE_OFF + P.LEDGE_W                    # inner edge of the ledge
+COVER_YB = P.TRAY_W / 2 - PLATE_OFF - WHEEL_Y        # back of the connector cover (wheel frame): flush
+                                                     # with the platform edge, against the tray wall
 if GROOVE_Z < PLATE_TOP + 0.5:
     raise ValueError("the cage groove would be below the platform: increase FOOT_H")
 
@@ -264,18 +266,15 @@ def platform(grip=True):
     slot = box(WHEEL_X - SLOT_HW, WHEEL_X + SLOT_HW, WHEEL_Y + SLOT_Y0, P.TRAY_W,
                PLATE_Z0 - 1, PLATE_TOP + 1)
     inside = prism(outline(-PLATE_OFF - 2.0), PLATE_Z0 - 2, PLATE_TOP + 2)
-    cover_back = box(WHEEL_X - 1, WHEEL_X + 1, WHEEL_Y + HOLE_Y1, WHEEL_Y + HOLE_Y1 + COVER_T, PLATE_Z0, PLATE_TOP)
-    if vol(seat + cover_back - inside) > 0.1:
-        raise ValueError("the wheel and its connector cover do not fit on the platform: "
-                         "check WHEEL_X / WHEEL_Y, or increase TRAY_L / TRAY_W")
+    if vol(seat - inside) > 0.1:
+        raise ValueError("the wheel does not fit on the platform: check WHEEL_X / WHEEL_Y, "
+                         "or increase TRAY_L / TRAY_W")
+    if COVER_YB - COVER_T < HOLE_Y1:
+        raise ValueError("no room for the display wires behind the wheel: lower WHEEL_Y")
     return p - seat - slot
 
 
 # -------------------------------------------------------------------- wheel
-def _screw_r():
-    return (P.WHEEL_D / 2 + (P.LCD_PCB_D / 2 + P.FIT)) / 2
-
-
 def wheel():
     """Ring housing and straight foot, in WHEEL coordinates (X centred, Y front=0, Z base=0)."""
     fw = P.FOOT_W / 2
@@ -294,17 +293,23 @@ def wheel():
     # bay behind the PCB: the Dupont connectors point straight back, out of the foot. It is
     # open at the bottom, over the wire slot of the platform
     body -= box(-P.BAY_W / 2, P.BAY_W / 2, Y_BACK, WHEEL_DEPTH + 1, -1, BAY_TOP)
-    if P.CAP_SCREWS:
-        for s in (-1, 1):
-            body -= cyl_y(1.7, WHEEL_DEPTH - 8, WHEEL_DEPTH + 1, x=s * _screw_r(), z=H_CENTER)
     return body
 
 
-def cap():
-    """Rear cap in WHEEL coordinates: flange at the back, boss pressing on the PCB."""
+def cap(grip=True):
+    """Rear cap in WHEEL coordinates: flange at the back, boss pressing on the PCB.
+    grip=False leaves out the friction ribs (they overlap the wheel on purpose)."""
     zc = H_CENTER
     flange = cyl_y(P.WHEEL_D, WHEEL_DEPTH, WHEEL_DEPTH + P.CAP_T, z=zc)
     boss = cyl_y(P.LCD_PCB_D + 2 * P.FIT - 2 * P.CAP_PRESS, Y_BACK, WHEEL_DEPTH, z=zc)
+    # friction fit: five small conical ribs along the boss, narrow at the front so they guide
+    # it in, then press into the PCB pocket of the wheel (none in front of the tab)
+    if grip and P.CAP_GRIP > 0:
+        r = 1.0
+        rc = P.LCD_PCB_D / 2 + P.FIT + P.CAP_GRIP - r
+        for a in (90, 25, 155, 215, 325):
+            x, z = rc * cos(radians(a)), zc + rc * sin(radians(a))
+            boss += Pos(x, Y_BACK, z) * (Rot(X=-90) * Cone(r - 0.4, r, WHEEL_DEPTH - Y_BACK, align=CEN))
     boss -= cyl_y(P.LCD_PCB_D - 8, Y_BACK - 1, WHEEL_DEPTH + 1, z=zc)
     c = flange + boss
     # cut flat just above the display connectors, which leave under it. The boss is cut away
@@ -313,9 +318,6 @@ def cap():
     c -= box(-P.WHEEL_D, P.WHEEL_D, Y_BACK - 1, WHEEL_DEPTH + P.CAP_T + 1, -1, CAP_CUT)
     tw = P.LCD_TAB_W / 2 + P.FIT
     c -= box(-tw, tw, Y_BACK - 1, WHEEL_DEPTH, -1, H_CENTER)
-    if P.CAP_SCREWS:
-        for s in (-1, 1):
-            c -= cyl_y(2.4, WHEEL_DEPTH - 1, WHEEL_DEPTH + P.CAP_T + 1, x=s * _screw_r(), z=zc)
     return c
 
 
@@ -324,12 +326,12 @@ def cover():
     the front (the connectors come in) and at the bottom (the wires go down the slot). A lip
     under each wall drops into the slot of the platform and holds it."""
     zb = POCKET_D                           # top of the platform
-    zr = PIN_Z + 1.27 + 0.6                 # underside of the roof, over the connectors
+    zr = PIN_Z + 1.27 + P.COVER_ROOM        # underside of the roof, over the connectors
     zt = zr + COVER_T
     yf = WHEEL_DEPTH + P.CAP_T + 0.3        # just behind the cap flange
-    yb = HOLE_Y1 + COVER_T
+    yb = COVER_YB                           # back: flush with the platform edge
     wo = COVER_IN + COVER_WALL
-    c = box(-wo, wo, yf, yb, zb, zt) - box(-COVER_IN, COVER_IN, yf - 1, HOLE_Y1, zb - 1, zr)
+    c = box(-wo, wo, yf, yb, zb, zt) - box(-COVER_IN, COVER_IN, yf - 1, yb - COVER_T, zb - 1, zr)
     # soft top edges (sides and back): it looks less like a box in the shavings
     for s in (-1, 1):
         c -= Pos(s * wo, (yf + yb) / 2, zt) * (Rot(Y=45) * Box(2.83, yb - yf + 2, 2.83))

@@ -54,8 +54,6 @@ about 100 g of filament. Prices change, these are only orders of magnitude.
 
 ### Optional
 
-- 2 self-tapping screws **M2 x 6 mm** and a small screwdriver, to lock the back cap of the wheel
-  (a drop of glue works as well).
 - A drop of super glue, to keep the wheel's foot in place.
 - A hot glue gun, only if the ESP32 is loose in its pocket (two dots).
 - A calliper or a ruler, to check your parts if something does not fit.
@@ -133,7 +131,7 @@ printing: **do not rotate them**, and you do not need supports.
 | 3 | `esp_fit_test.stl` | Optional: the ESP32 pocket alone, to check the fit before the tray | 56 x 36 x 11 | PLA or PETG |
 | 4 | `tray.stl` | The red tub, the ESP32 lies at the bottom | 111 x 74 x 42 | PLA or PETG |
 | 5 | `platform.stl` | The floor of the cage, over the ESP32 | 97 x 60 x 3 | PLA or PETG |
-| 6 | `dupont_cover.stl` | Hides the wire sockets behind the wheel | 24 x 16 x 11 | PLA or PETG |
+| 6 | `dupont_cover.stl` | Hides the wire sockets behind the wheel | 24 x 21 x 13 | PLA or PETG |
 | 7 | `cage_net.stl` | The cage, printed **flat** | 216 x 179 x 3 | PETG (best) or PLA |
 
 Settings that work: layer height **0.2 mm**, infill **15 %**, **no supports**, 0.4 mm nozzle.
@@ -183,9 +181,9 @@ with the tab and its row of pins at the **bottom**. Plug the 7 jumper wires onto
 (use the same wires you tested with). The sockets point straight backwards, out of the back of
 the foot: that is normal, a small cover hides them at the end.
 
-**4. Close the wheel.** Push the round **cap** into the back of the wheel, above the sockets. Lock
-it with the 2 small screws, or a drop of glue. If the screen rattles, a small piece of foam tape
-between the screen and the cap fixes it.
+**4. Close the wheel.** Push the round **cap** into the back of the wheel, above the sockets, until
+its rim touches the wheel: five small ribs hold it by friction (if it is too tight, sand them a
+little). If the screen rattles, a small piece of foam tape between the screen and the cap fixes it.
 
 **5. Connect.** Plug the other end of the 7 wires onto the ESP32 pins (table above). Hold the
 platform above the tray and slide the wires into the **slot** behind the wheel, from the back

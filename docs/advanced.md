@@ -124,9 +124,12 @@ The script checks that every part is a closed mesh and that the assembled parts 
 - **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
   glass seat; under it the foot is solid, so its bottom is flat for gluing. The header pins point
   straight back from the tab, so the connectors (about 16.5 mm) stick out of the back of the foot,
-  through a bay that is open at the bottom. The cap is cut flat just above them.
+  through a bay that is open at the bottom. The cap is cut flat just above them and holds by
+  friction: five small ribs on its plug press `CAP_GRIP` into the wheel. The window
+  (`WHEEL_WINDOW_D`) is a little smaller than the picture, to hide its black border.
 - **Wires:** a slot in the platform runs from under that bay to the back edge, so the wires slide
-  in with everything plugged. A small cover hides the connectors behind the cap: its walls stand
+  in with everything plugged. A small cover hides the connectors behind the cap, up to the
+  back edge of the platform (`COVER_ROOM` is the space over the connectors): its walls stand
   on the platform beside the slot, and a lip under each wall drops into the slot (`COVER_FIT`).
 - **Cage:** one flat net (roof in the middle, one wall on each edge, joined by living hinges) that folds
   and plugs into a groove all around the rim of the tray: the tray wall is its outer side, a thin

@@ -75,20 +75,23 @@ PLATE_GRIP = 0.15       # six small ribs on the platform edge press this far int
                         # (too tight: sand the ribs or lower it, too loose: raise it, 0 = no ribs)
 LEDGE_W = 1.5           # how far the ledge under the platform reaches in
 COVER_FIT = 0.05        # clearance of the lips of the connector cover in the platform slot, per side
+COVER_ROOM = 2.0        # free space between the top of the display connectors and the cover roof
 RING_OVER_GROOVE = 3.8  # bottom of the wheel ring above the floor of the cage groove (3.8 keeps the
                         # cage height of the first version, an already printed cage still fits)
 
 # ------------------------------------------------------------------ wheel
 WHEEL_D = 48.0          # outer diameter of the wheel housing
 WHEEL_TUBE = 6.0        # depth of the "tunnel" in front of the screen
-WHEEL_WINDOW_D = LCD_ACTIVE_D + 1.0
+WHEEL_WINDOW_D = LCD_ACTIVE_D - 2.0   # 1.5 mm smaller than the first try on each side: it hides the black
+                                      # border at the edge of the picture
 WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the picture
 FOOT_H = 7.0            # height of the straight foot below the ring (it stands in the shavings)
 FOOT_W = 30.0           # foot width, a little more than the display tab
 FIT = 0.25              # general radial clearance for pockets
 CAP_T = 1.5             # rear cap flange thickness
-CAP_SCREWS = True       # two M2 self tapping screws (optional, glue also works)
 CAP_PRESS = 0.15        # radial clearance of the cap plug in the PCB pocket
+CAP_GRIP = 0.15         # five small ribs on the cap plug press this far into the wheel: a friction fit
+                        # (too tight: sand the ribs or lower it, too loose: raise it)
 
 # ------------------------------------------------------------------- cage
 # Printed flat as one "net": the roof in the middle and one wall around each of

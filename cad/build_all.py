@@ -48,7 +48,7 @@ def assembly_parts():
         "tray": K.tray(press=False),            # the ESP32 friction fit overlaps the board on purpose
         "platform": K.platform(grip=False),     # the friction ribs overlap the tray on purpose
         "wheel": K.place_wheel(K.wheel()),
-        "wheel_cap": K.place_wheel(K.cap()),
+        "wheel_cap": K.place_wheel(K.cap(grip=False)),   # its friction ribs overlap the wheel on purpose
         "dupont_cover": K.place_wheel(K.cover()),
         "cage": C.folded(),
     }
