@@ -46,7 +46,7 @@ ESP_GAP = 0.3           # clearance around the PCB in its pocket
 TRAY_L = 105.0          # outer size along X (longer than wide, like a real cage)
 TRAY_W = 68.0           # outer size along Y, front to back
 FLARE = 3.0             # the walls lean out: the top is this much wider than the bottom, per side (0 = straight)
-CORNER_CUT = 8.0        # 45 degree chamfer on the four vertical corners (0 = square corners)
+CORNER_CUT = 0.0        # 45 degree chamfer on the four vertical corners (0 = square corners, like a real cage)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
 BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front)

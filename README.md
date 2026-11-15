@@ -141,7 +141,7 @@ drops into it from the back, with the glass facing the front. If it does not, **
 your screen, before printing the rest. Makers can also adjust the model themselves
 ([details](docs/advanced.md#adjust-the-dimensions-to-your-parts)).
 
-**About the cage.** It is a flat sheet of bars: a roof in the middle and 8 walls around it, linked by
+**About the cage.** It is a flat sheet of bars: a roof in the middle and 4 walls around it, linked by
 very thin hinges (0.4 mm). Print it slowly (a slow first layer, a clean and well levelled bed).
 You fold it afterwards, it is not glued.
 
@@ -198,7 +198,7 @@ over the sockets behind it.
 
 **8. Fold and place the cage.**
 - Take the flat cage off the bed.
-- Fold the 8 walls toward the side that was **facing up** while printing, one after the other:
+- Fold the 4 walls toward the side that was **facing up** while printing, one after the other:
   the thin hinges end up on the outside.
 - Turn the cage over (roof on top) and set it on the tray.
 - Push the bottom of the walls into the **groove** that runs along the top of the tray. Start with

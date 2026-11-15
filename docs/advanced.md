@@ -85,8 +85,8 @@ yours with callipers and edit the lines tagged `measure me` in [`cad/params.py`]
 | `USB_HOLE_W` | width of your USB-C plug body (some cables have a big moulded end) |
 
 The same file has the shape settings: `TRAY_L` and `TRAY_W` (footprint at the bottom), `FLARE` (how
-much the walls lean out, per side), `WHEEL_X` (the wheel stands off centre), `CORNER_CUT` (the chamfered
-corners, 0 for square ones), `WALL_PITCH` (gap between the cage bars), `BELT_POS` (height of the
+much the walls lean out, per side), `WHEEL_X` (the wheel stands off centre), `CORNER_CUT` (0 for square
+corners, the default, or a 45 degree chamfer), `WALL_PITCH` (gap between the cage bars), `BELT_POS` (height of the
 horizontal bar) and the hinge settings.
 
 Then regenerate the STL files:
@@ -118,7 +118,7 @@ The script checks that every part is a closed mesh and that the assembled parts 
   back from the tab, so the connectors (about 16.5 mm) stick out of the back of the foot, right at
   the shavings level. The wires go down through a hole in the platform. The cap is cut flat just
   above the connectors.
-- **Cage:** one flat net (roof in the middle, 8 walls around, joined by living hinges) that folds
+- **Cage:** one flat net (roof in the middle, one wall on each edge, joined by living hinges) that folds
   and plugs into a groove all around the rim of the tray: the tray wall is its outer side, a thin
   inner wall the other side. The roof is a little **smaller** than the
   groove on purpose: when a wall is folded, the hinge bends into a small arc, so the wall ends up
