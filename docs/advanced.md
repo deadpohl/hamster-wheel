@@ -110,7 +110,8 @@ The script checks that every part is a closed mesh and that the assembled parts 
   (`FOOT_H`, `RING_OVER_GROOVE`): the bottom of the ring is about level with the rim. The
   platform has `PLATE_FIT` clearance all around, and six small conical ribs on its edge press
   `PLATE_GRIP` into the wall for a friction fit (narrow at the bottom, so they also guide it in).
-- **ESP32:** it lies upside down on the floor of the tray, resting on its module and USB-C socket
+- **ESP32:** it lies upside down on the floor of the tray, USB end against the back wall (the cable
+  leaves at the back), GPIO pin row toward the wheel, resting on its module and USB-C socket
   (pockets under the EN and BOOT buttons keep them free). It sits in a low pocket: walls along the
   long edges, two posts at the USB end, two stops beside the antenna. Two dots of hot glue hold
   it. Nothing clips: the header plastic covers the long edges, and flexing snaps and hooks failed

@@ -49,7 +49,7 @@ FLARE = 3.0             # the walls lean out: the top is this much wider than th
 CORNER_CUT = 0.0        # 45 degree chamfer on the four vertical corners (0 = square corners, like a real cage)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
-BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front)
+BOARD_X = -22.0         # ESP32 position along X (its USB end faces the back wall, the cable leaves at the back)
 WHEEL_X = 15.0          # wheel position along X (0 = centred). Off centre, to the right, away from
                         # the ESP32 connectors: the wires from the display have room to curl
 # The top of the tray is the groove for the cage: the tray wall is its outer side, a thin

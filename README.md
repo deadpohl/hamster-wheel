@@ -167,8 +167,8 @@ the bottom of the tray.
 
 - The side with the **black plastic strips and the metal pins** faces **up**. The silver WiFi module
   faces **down**.
-- The **USB plug** end goes to the **left wall**, where the opening is, and the antenna (the short
-  black tongue at the other end) points to the right.
+- The **USB plug** end goes to the **back wall**, where the opening is, and the antenna (the short
+  black tongue at the other end) points to the front.
 - Lay it flat into the low **pocket** on the floor. Two dots of hot glue between the edge of the
   board and the pocket walls keep it there. Keep the glue away from the two small buttons next to
   the USB socket.
@@ -209,7 +209,7 @@ over the sockets behind it.
 
 Done! This toy is a decoration: **no real hamster inside**.
 
-The USB cable goes out through the opening on the left of the tray. It powers the toy, and it is
+The USB cable goes out through the opening at the back of the tray. It powers the toy, and it is
 also how you can change the program later without opening anything.
 
 ---

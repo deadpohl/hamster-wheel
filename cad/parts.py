@@ -31,12 +31,13 @@ BOARD_BOT = P.FLOOR + P.ESP_UNDER_H               # underside of the ESP32 PCB (
 BOARD_TOP = BOARD_BOT + P.ESP_PCB_T               # pin side of the PCB
 PLATE_Z0 = BOARD_TOP + P.DUPONT_H + P.WIRE_BEND   # underside of the platform
 PLATE_TOP = PLATE_Z0 + P.PLATE_T
-INNER_L = P.TRAY_L - 2 * P.WALL
 INNER_W = P.TRAY_W - 2 * P.WALL
-# USB end of the PCB (left): the USB-C socket nose ends just inside the wall
-BOARD_X0 = -INNER_L / 2 + max(1.4, P.USB_NOSE + 0.3)
-BOARD_X1 = BOARD_X0 + P.ESP_L                     # antenna end (right), the antenna sticks out further
-BOARD_YC = P.BOARD_Y
+# The ESP32 mount and model are built in a BOARD frame: X along the PCB, from its USB end (0)
+# to its antenna end (ESP_L), Y across from the centre line, Z as in the assembly. BOARD_LOC
+# turns it so the USB end faces the back wall (the USB-C nose ends just inside the wall) and
+# the pin row with the GPIOs faces +X, toward the wheel.
+USB_MARGIN = max(1.4, P.USB_NOSE + 0.3)           # inner face of the wall to the USB end of the PCB
+BOARD_LOC = Pos(P.BOARD_X, INNER_W / 2 - USB_MARGIN, 0) * Rot(Z=-90)
 ROW_DY = 12.7                                     # pin rows, from the board centre line (25.4 apart)
 
 # wheel housing: tunnel, glass, PCB, then room behind the PCB
@@ -163,9 +164,17 @@ def tray():
             t -= Location(pl) * (Pos(0, 0, -0.1) * Cone(
                 P.BUMP_R + 0.6, P.BUMP_R + 0.1, P.DIMPLE_D + 0.2, align=CEN))
 
+    keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
+    feats, cuts = _esp_mount()
+    t += (BOARD_LOC * feats) & keep
+    return t - BOARD_LOC * cuts
+
+
+def _esp_mount():
+    """ESP32 pocket in the BOARD frame: (features to add, cuts)."""
     # ESP32 upside down, resting on its module and USB-C socket, in a low pocket that stops
     # it in X and Y. Nothing clips: two dots of hot glue on the walls hold it.
-    yc, x0, x1 = BOARD_YC, BOARD_X0, BOARD_X1
+    yc, x0, x1 = 0.0, 0.0, P.ESP_L
     hw = P.ESP_W / 2
     zt = BOARD_TOP
     fz = P.FLOOR - 0.1
@@ -181,7 +190,7 @@ def tray():
     # USB end: two posts against the PCB end, on both sides of the USB-C socket
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
-        feats.append(box(-INNER_L / 2 - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
+        feats.append(box(-USB_MARGIN - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
     # antenna end: two stops beside the antenna, below the PCB top (the pin headers stick
     # out a little past the PCB end)
     xs = x1 + g
@@ -190,18 +199,16 @@ def tray():
         a, b = yc + s * ah, yc + s * (hw + g + 1.4)
         feats.append(box(xs, xs + 2.0, min(a, b), max(a, b), fz, zt - 0.2))
 
-    keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
-    t += fuse_all(feats) & keep
+    cuts = []
     # pockets under the EN and BOOT buttons, so they can never be pressed by the floor
     for s in (-1, 1):
         a, b = yc + s * 5.0, yc + s * 11.5
-        t -= box(x0 - 0.2, x0 + 7.5, min(a, b), max(a, b), P.FLOOR - 1.2, P.FLOOR + 0.1)
-
-    # USB-C opening in the left wall, open at the bottom: the plug body is taller than the
-    # socket and reaches below the floor level
-    t -= box(-P.TRAY_L / 2 - 1, -INNER_L / 2 + 0.5, yc - P.USB_HOLE_W / 2, yc + P.USB_HOLE_W / 2,
-             -1, zt + 2.5)
-    return t
+        cuts.append(box(x0 - 0.2, x0 + 7.5, min(a, b), max(a, b), P.FLOOR - 1.2, P.FLOOR + 0.1))
+    # USB-C opening in the wall, open at the bottom: the plug body is taller than the socket
+    # and reaches below the floor level
+    cuts.append(box(-USB_MARGIN - P.WALL - P.FLARE - 2, -USB_MARGIN + 0.5,
+                    yc - P.USB_HOLE_W / 2, yc + P.USB_HOLE_W / 2, -1, zt + 2.5))
+    return fuse_all(feats), fuse_all(cuts)
 
 
 # ----------------------------------------------------------------- platform
@@ -282,7 +289,7 @@ def place_wheel(shape):
 # ---------------------------------------------------------- reference models
 def esp32_ghost():
     """Dummy ESP32 board (upside down) with its Dupont connectors, for fit checks and previews."""
-    yc, x0, x1 = BOARD_YC, BOARD_X0, BOARD_X1
+    yc, x0, x1 = 0.0, 0.0, P.ESP_L
     hw = P.ESP_W / 2
     zb, zt = BOARD_BOT, BOARD_TOP
     fl = P.FLOOR + 0.05
@@ -304,7 +311,7 @@ def esp32_ghost():
     top = zt + P.DUPONT_H
     b += box(xk(11) - 1.27, xk(1) + 1.27, yc + ROW_DY - 1.27, yc + ROW_DY + 1.27, zt, top)
     b += box(xk(1) - 1.27, xk(1) + 1.27, yc - ROW_DY - 1.27, yc - ROW_DY + 1.27, zt, top)
-    return b
+    return BOARD_LOC * b
 
 
 def lcd_ghost():
