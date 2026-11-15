@@ -43,13 +43,14 @@ USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a bi
 ESP_GAP = 0.3           # clearance around the PCB in its pocket
 
 # ------------------------------------------------------------------- tray
-TRAY_L = 90.0           # outer size along X
-TRAY_W = 68.0           # outer size along Y, front to back (room for the wheel bay and shavings)
+TRAY_L = 105.0          # outer size along X (longer than wide, like a real cage)
+TRAY_W = 68.0           # outer size along Y, front to back
 CORNER_CUT = 8.0        # 45 degree chamfer on the four vertical corners (0 = square corners)
 WALL = 2.8              # wall thickness
 FLOOR = 2.0
 BOARD_Y = -11.0         # ESP32 position along Y (negative = toward the front)
-WHEEL_X = 0.0           # wheel position along X (0 = centred)
+WHEEL_X = 15.0          # wheel position along X (0 = centred). Off centre, to the right, away from
+                        # the ESP32 connectors: the wires from the display have room to curl
 # The top of the tray is the groove for the cage: the tray wall is its outer side, a thin
 # inner wall is the other side.
 GROOVE_WALL_H = 7.0     # height of the inner wall of the groove (the tray wall is 2 mm lower: it guides the cage in)
