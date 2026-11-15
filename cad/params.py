@@ -82,7 +82,7 @@ RING_OVER_GROOVE = 3.8  # bottom of the wheel ring above the floor of the cage g
 # ------------------------------------------------------------------ wheel
 WHEEL_D = 48.0          # outer diameter of the wheel housing
 WHEEL_TUBE = 6.0        # depth of the "tunnel" in front of the screen
-WHEEL_WINDOW_D = LCD_ACTIVE_D - 2.0   # 1.5 mm smaller than the first try on each side: it hides the black
+WHEEL_WINDOW_D = LCD_ACTIVE_D - 1.0   # 1 mm smaller than the first try on each side: it hides the black
                                       # border at the edge of the picture
 WHEEL_FLARE = 1.5       # chamfer on the window so the tunnel does not clip the picture
 FOOT_H = 7.0            # height of the straight foot below the ring (it stands in the shavings)
