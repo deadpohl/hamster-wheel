@@ -114,11 +114,12 @@ The script checks that every part is a closed mesh and that the assembled parts 
 - **ESP32:** it lies upside down on the floor of the tray, USB end against the back wall (the cable
   leaves at the back), GPIO pin row toward the wheel, resting on its module and USB-C socket
   (pockets under the EN and BOOT buttons keep them free). It sits in a low pocket: walls along the
-  long edges, two posts at the USB end, two stops beside the antenna, snug against the PCB end
-  (`ESP_STOP_GAP`): a friction fit. Nothing clips: the header plastic covers the long edges, and
+  long edges, two posts at the USB end, two stops beside the antenna: a friction fit (the long
+  walls press slightly on the PCB, the posts and stops touch its ends). Nothing clips: the header plastic covers the long edges, and
   flexing snaps and hooks failed or were fiddly in test prints. Pushing or pulling the USB plug
   presses the board down, never up. `esp_fit_test.stl` is the pocket alone on a piece of floor:
-  print it to tune `ESP_GAP`, `ESP_STOP_GAP`, `ESP_WALL_T` and `ESP_WALL_H` before printing the
+  print it to tune `ESP_SIDE_GAP`, `ESP_USB_GAP`, `ESP_STOP_GAP` (negative = tighter),
+  `ESP_WALL_T` and `ESP_WALL_H` before printing the
   tray. If the board is loose, two dots of hot glue hold it.
 - **Display:** a disc with a tab at the bottom. The slot for the tab starts at the same depth as the
   glass seat; under it the foot is solid, so its bottom is flat for gluing. The header pins point

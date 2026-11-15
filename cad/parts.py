@@ -144,7 +144,8 @@ def edges(pts):
 
 
 # --------------------------------------------------------------------- tray
-def tray():
+def tray(press=True):
+    """press=False: the ESP32 pocket without its friction fit (for the assembly check)."""
     c = P.LEAD_IN
     # the walls lean out, the floor keeps the bottom outline. Above the groove floor the inner
     # face is vertical: that is the outer side of the groove
@@ -174,7 +175,7 @@ def tray():
                 P.BUMP_R + 0.6, P.BUMP_R + 0.1, P.DIMPLE_D + 0.2, align=CEN))
 
     keep = prism(outline(-P.WALL + 0.5), 0, TRAY_H)   # features may merge into the walls, never stick out
-    feats, cuts = _esp_mount()
+    feats, cuts = _esp_mount(press)
     t += (BOARD_LOC * feats) & keep
     # USB-C opening in the back wall, open at the bottom: the plug body is taller than the
     # socket and reaches below the floor level
@@ -183,16 +184,18 @@ def tray():
     return t - BOARD_LOC * cuts
 
 
-def _esp_mount():
-    """ESP32 pocket in the BOARD frame: (features to add, cuts)."""
-    # ESP32 upside down, resting on its module and USB-C socket, in a snug pocket: the posts
-    # at the USB end and the stops at the antenna end hold it by friction, the long walls
-    # keep it straight. Nothing clips (the header plastic covers the long edges).
+def _esp_mount(press=True):
+    """ESP32 pocket in the BOARD frame: (features to add, cuts). press=False turns negative
+    clearances into 0 (the friction fit overlaps the board model on purpose)."""
+    # ESP32 upside down, resting on its module and USB-C socket, in a snug pocket: the long
+    # walls, the posts at the USB end and the stops at the antenna end hold it by friction.
+    # Nothing clips (the header plastic covers the long edges).
+    gap = (lambda v: v) if press else (lambda v: max(v, 0.0))
     yc, x0, x1 = 0.0, 0.0, P.ESP_L
     hw = P.ESP_W / 2
     zt = BOARD_TOP
     fz = P.FLOOR - 0.1
-    g = P.ESP_GAP
+    g = gap(P.ESP_SIDE_GAP)
     t = P.ESP_WALL_T
     feats = []
     # long walls beside the PCB and the header plastic, with a lead-in chamfer at the top
@@ -205,10 +208,10 @@ def _esp_mount():
     # USB end: two posts against the PCB end, on both sides of the USB-C socket
     for s in (-1, 1):
         a, b = yc + s * 6.6, yc + s * 10.8
-        feats.append(box(-USB_MARGIN - 0.5, x0 - g, min(a, b), max(a, b), fz, wz1))
+        feats.append(box(-USB_MARGIN - 0.5, x0 - gap(P.ESP_USB_GAP), min(a, b), max(a, b), fz, wz1))
     # antenna end: two thick stops beside the antenna, snug against the PCB end, a little
     # higher than the PCB with a lead-in chamfer
-    xs = x1 + P.ESP_STOP_GAP
+    xs = x1 + gap(P.ESP_STOP_GAP)
     st = t + 1.0
     sz = zt + 1.5
     prof = [(xs, fz), (xs + st, fz), (xs + st, sz), (xs + 0.6, sz), (xs, sz - 0.6)]
@@ -235,7 +238,7 @@ def esp_fit_test():
     the friction fit before printing the whole tray."""
     feats, cuts = _esp_mount()
     m = 1.5
-    hw = P.ESP_W / 2 + P.ESP_GAP + P.ESP_WALL_T + m
+    hw = P.ESP_W / 2 + max(P.ESP_SIDE_GAP, 0) + P.ESP_WALL_T + m
     plate = box(-USB_MARGIN - 0.5 - m, P.ESP_L + P.ESP_STOP_GAP + P.ESP_WALL_T + 1.0 + m, -hw, hw, 0, P.FLOOR)
     return plate + feats - cuts
 

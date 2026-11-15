@@ -42,8 +42,10 @@ DUPONT_H = 15.0         # measure me: top of a plugged Dupont connector above th
 WIRE_BEND = 8.0         # room above the Dupont connectors for the wires to bend
 USB_NOSE = 1.5          # measure me: how far the USB-C socket sticks out past the end of the PCB
 USB_HOLE_W = 12.5       # opening for the USB-C plug body (some cables have a big moulded end)
-ESP_GAP = 0.3           # clearance around the PCB in its pocket
-ESP_STOP_GAP = 0.0      # clearance between the antenna end of the PCB and its two stops (the friction fit)
+# Friction fit of the pocket: clearance between the PCB and each part of it (negative = it presses)
+ESP_SIDE_GAP = -0.1     # the two long walls, per side
+ESP_USB_GAP = 0.0       # the two posts at the USB end
+ESP_STOP_GAP = 0.0      # the two stops at the antenna end
 ESP_WALL_T = 2.0        # thickness of the pocket walls and stops
 ESP_WALL_H = 3.5        # height of the pocket walls above the PCB
 
