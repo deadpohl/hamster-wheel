@@ -29,7 +29,7 @@ le générateur des modèles 3D sont aussi ici : voir [Pour les makers](#makers)
 > votre écran, dites-le-moi (ouvrez une Issue) : c'est sans doute une mesure qui change d'un
 > vendeur à l'autre.
 
-**Sommaire :** [Liste d'achats](#achats) -
+**Sommaire :** [Matériel requis](#achats) -
 [Étape 1 : tester l'électronique](#etape-1) - [Étape 2 : imprimer](#etape-2) -
 [Étape 3 : assembler](#etape-3) - [Un problème ?](#problemes) - [Lexique](#lexique) -
 [Pour les makers](#makers)
