@@ -97,7 +97,9 @@ CAP_GRIP = 0.15         # five small ribs on the cap plug press this far into th
 # Printed flat as one "net": the roof in the middle and one wall around each of
 # its edges, joined by thin living hinges. Fold the walls up and plug them into the groove of the tray.
 CAGE_T = 2.0            # thickness of every cage panel
-BAR_W = 1.6             # bar width
+BAR_W = 0.8             # bar width (walls, belt and roof; the posts and rails keep their own width).
+                        # 0.8 = two lines of a 0.4 mm nozzle, thin like real cage wire
+BAR_T = 1.2             # bar thickness, from the outer face (the frame keeps CAGE_T)
 WALL_PITCH = 11.0       # vertical bar spacing on the walls (large: you must see the wheel)
 BELT_POS = 0.5           # height of the horizontal bar, all around: 0 = right under the top rail, 1 = just above the skirt
 ROOF_PITCH = 14.0       # bar spacing on the roof

@@ -63,8 +63,9 @@ def roof():
     xs = [p[0] for p in win_pts]
     ys = [p[1] for p in win_pts]
     ax, ay = max(xs), max(ys)
-    bars = [box(x - P.BAR_W / 2, x + P.BAR_W / 2, -ay - 1, ay + 1, -1, T + 1) for x in _spread(ax, P.ROOF_PITCH)]
-    bars += [box(-ax - 1, ax + 1, y - P.BAR_W / 2, y + P.BAR_W / 2, -1, T + 1) for y in _spread(ay, P.ROOF_PITCH)]
+    # the bars are thinner than the frame: P.BAR_T from the outer face
+    bars = [box(x - P.BAR_W / 2, x + P.BAR_W / 2, -ay - 1, ay + 1, -1, P.BAR_T) for x in _spread(ax, P.ROOF_PITCH)]
+    bars += [box(-ax - 1, ax + 1, y - P.BAR_W / 2, y + P.BAR_W / 2, -1, P.BAR_T) for y in _spread(ay, P.ROOF_PITCH)]
     hole = prism(win_pts, -1, T + 1)
     if bars:
         hole = hole - _fuse(bars)
@@ -80,11 +81,12 @@ def wall_panel(length, beta_tan):
     iu = length / 2 - P.POST_W
     if iu > 2.0:
         window = box(-iu, iu, P.RAIL_W, HW - P.RIM_H, -1, T + 1)
-        bars = [box(u - P.BAR_W / 2, u + P.BAR_W / 2, P.RAIL_W - 0.5, HW - P.RIM_H + 0.5, -1, T + 1)
+        # the bars are thinner than the frame: P.BAR_T from the outer face
+        bars = [box(u - P.BAR_W / 2, u + P.BAR_W / 2, P.RAIL_W - 0.5, HW - P.RIM_H + 0.5, -1, P.BAR_T)
                 for u in _spread(iu, P.WALL_PITCH)]
         if length > 30:                     # one horizontal bar on every side, at the same height
             hm = P.RAIL_W + P.BELT_POS * (HW - P.RIM_H - P.RAIL_W)
-            bars.append(box(-iu - 0.5, iu + 0.5, hm - P.BAR_W / 2, hm + P.BAR_W / 2, -1, T + 1))
+            bars.append(box(-iu - 0.5, iu + 0.5, hm - P.BAR_W / 2, hm + P.BAR_W / 2, -1, P.BAR_T))
         body -= window - _fuse(bars) if bars else window
 
     # snap bump on the inner face of the skirt (fits the groove in the tray wall)
