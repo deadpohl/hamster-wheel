@@ -18,7 +18,7 @@ navigateur web, et c'est fini. **Pas de soudure, pas de programmation.**
 </p>
 
 Ce guide est écrit pour quelqu'un qui n'a **jamais rien fait de ce genre**. Si un mot n'est pas
-clair, cherchez-le dans le [lexique](#lexique) en bas de page. Si vous aimez bricoler, le code et
+clair, cherchez-le dans le [lexique](#lexique) en bas de page. Si vous aimez bidouiller, le code et
 le générateur des modèles 3D sont aussi ici : voir [Pour les makers](#makers).
 
 > **Où en est le projet.** Tout est testé : l'électronique et le programme sur du vrai matériel,
@@ -35,7 +35,7 @@ le générateur des modèles 3D sont aussi ici : voir [Pour les makers](#makers)
 ---
 
 <a id="achats"></a>
-## 1. Liste d'achats
+## 1. Matériel requis
 
 Il vous faut **une imprimante 3D** (plateau d'au moins 220 x 220 mm), **un ordinateur** avec le
 navigateur Chrome ou Edge, et les pièces ci-dessous. Comptez environ 15 à 25 euros
