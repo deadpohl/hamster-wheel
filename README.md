@@ -2,6 +2,8 @@
 <!-- SPDX-License-Identifier: CC-BY-NC-SA-4.0 -->
 # Hamster Wheel Desk Toy
 
+**English** | [Français](README.fr.md)
+
 A tiny desk toy: a cage, a wheel, and a hamster that runs **forever** (or at least as long as
 it is plugged in).
 
@@ -48,7 +50,7 @@ about 100 g of filament. Prices change, these are only orders of magnitude.
 
 | What | Notes |
 |---|---|
-| **USB cable** | Must carry **data**, not only charge (some cheap cables only charge). The plug on the ESP32 board's side must match the board (USB-C or micro-USB). The big moulded plugs of some cables may not fit the opening: it is 11.5 x 7 mm. |
+| **USB cable** | Must carry **data**, not only charge (some cheap cables only charge). The plug on the ESP32 board's side must match the board (USB-C or micro-USB). The big moulded plugs of some cables may not fit the opening: it is 12.5 mm wide. |
 | **USB power** | Any phone charger (5 V) or a USB port of a computer. |
 | **Filament** | About 100 g in total. PLA or PETG for every part. For the cage, **PETG is the safest** (it folds on thin hinges), but PLA works too if you follow the tip in step 2. Colours are free: the original is a red tray, yellow wheel and light blue cage. |
 | **Wood shavings** | A pinch. The shavings from a pencil sharpener are perfect. |
