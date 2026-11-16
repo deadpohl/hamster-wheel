@@ -216,7 +216,7 @@ the cover.
   clicks into a small hole in the rim.
 - To open the toy, pull the cage straight up.
 
-Done! This toy is a decoration: **no real hamster inside**.
+Done!
 
 The USB cable goes out through the opening at the back of the tray. It powers the toy, and it is
 also how you can change the program later without opening anything.
