@@ -232,7 +232,7 @@ cache.
   chaque mur s'enclenche dans un petit creux du rebord.
 - Pour ouvrir l'objet, tirez la cage tout droit vers le haut.
 
-C'est fini ! Cet objet est une décoration : **pas de vrai hamster dedans**.
+C'est fini !
 
 Le câble USB sort par l'ouverture à l'arrière du bac. Il alimente l'objet, et c'est aussi par lui
 que vous pourrez changer le programme plus tard sans rien ouvrir.
