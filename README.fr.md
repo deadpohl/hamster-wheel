@@ -5,7 +5,7 @@
 
 [English](README.md) | **Français**
 
-Un petit objet de bureau : une cage, une roue, et un hamster qui court **pour toujours** (ou du
+Une cage, une roue, et un hamster qui court **pour toujours** (ou du
 moins tant qu'il est branché).
 
 Le hamster est une courte animation jouée sur un petit écran rond caché dans la roue.
