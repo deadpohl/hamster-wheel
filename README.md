@@ -17,9 +17,10 @@ This guide is written for someone who has **never done anything like this**. If 
 unclear, look it up in [Words explained](#words-explained) at the bottom. If you like to tinker,
 the code and the 3D model generator are all here too: see [For makers](#for-makers).
 
-> **Where the project stands.** The electronics and the program are tested on real hardware.
-> The 3D printed parts are in their final test round: if one of them does not fit your parts,
-> please tell me (open an Issue), it is probably a measurement that varies between sellers.
+> **Where the project stands.** Everything is tested: the electronics and the program on real
+> hardware, and every printed part was printed and assembled at home, on my own printer. I hope
+> it works just as well on yours! If a part does not fit your board or screen, please tell me
+> (open an Issue): it is probably a measurement that varies between sellers.
 
 **Contents:** [Shopping list](#1-shopping-list) -
 [Step 1: test the electronics](#2-step-1-test-the-electronics-before-printing-anything) -
