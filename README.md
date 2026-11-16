@@ -12,9 +12,11 @@ You 3D print the parts, plug 7 wires, load the program from your web browser, an
 **No soldering and no programming.**
 
 <p align="center">
-  <img src="docs/img/photo.jpg" width="46%" alt="The finished toy">
+  <a href="https://www.instagram.com/reel/Dfz2Lz3Ns2T/"><img src="docs/img/video.jpg" width="46%" alt="Video: the finished toy and how it goes together (on Instagram)"></a>
   <img src="docs/img/assembly.jpg" width="50%" alt="Preview of the assembled toy">
 </p>
+
+<p align="center"><b>Watch it run and see it assembled:</b> <a href="https://www.instagram.com/reel/Dfz2Lz3Ns2T/">the video on Instagram</a></p>
 
 This guide is written for someone who has **never done anything like this**. If a word is
 unclear, look it up in [Words explained](#words-explained) at the bottom. If you like to tinker,

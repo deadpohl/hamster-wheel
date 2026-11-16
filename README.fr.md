@@ -13,9 +13,11 @@ Vous imprimez les pièces en 3D, vous branchez 7 fils, vous chargez le programme
 navigateur web, et c'est fini. **Pas de soudure, pas de programmation.**
 
 <p align="center">
-  <img src="docs/img/photo.jpg" width="46%" alt="L'objet terminé">
+  <a href="https://www.instagram.com/reel/Dfz2Lz3Ns2T/"><img src="docs/img/video.jpg" width="46%" alt="Vidéo : l'objet terminé et son assemblage (sur Instagram)"></a>
   <img src="docs/img/assembly.jpg" width="50%" alt="Aperçu de l'objet assemblé">
 </p>
+
+<p align="center"><b>Le voir tourner et le voir assemblé :</b> <a href="https://www.instagram.com/reel/Dfz2Lz3Ns2T/">la vidéo sur Instagram</a></p>
 
 Ce guide est écrit pour quelqu'un qui n'a **jamais rien fait de ce genre**. Si un mot n'est pas
 clair, cherchez-le dans le [lexique](#lexique) en bas de page. Si vous aimez bidouiller, le code et
