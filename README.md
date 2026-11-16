@@ -2,7 +2,8 @@
 <!-- SPDX-License-Identifier: CC-BY-NC-SA-4.0 -->
 # Hamster Wheel Desk Toy
 
-A tiny desk toy: a cage, a wheel, and a hamster that runs **forever**.
+A tiny desk toy: a cage, a wheel, and a hamster that runs **forever** (or at least as long as
+it is plugged in).
 
 The hamster is a short animation played on a small round screen hidden in the wheel.
 You 3D print the parts, plug 7 wires, load the program from your web browser, and you are done.
@@ -161,36 +162,38 @@ a drop of super glue repairs it.
   <img src="docs/img/wheel_exploded.jpg" width="50%" alt="The wheel, screen and cap">
 </p>
 
+**Keep the wiring of [step 1](#2b-plug-the-screen).** The screen and the ESP32 stay connected by
+the 7 wires during the whole assembly: you never unplug anything. Unplug only the USB cable.
+
 **1. Put the ESP32 in the tray.** This is the unusual part: the board goes in **upside down**, at
-the bottom of the tray.
+the bottom of the tray. The screen hangs on its wires for now.
 
 <p align="center"><img src="docs/img/tray_inside.jpg" width="48%" alt="The ESP32 upside down in the tray"></p>
 
-- The side with the **black plastic strips and the metal pins** faces **up**. The silver WiFi module
-  faces **down**.
-- The **USB plug** end goes to the **back wall**, where the opening is, and the antenna (the short
-  black tongue at the other end) points to the front.
+- The side with the **black plastic strips and the metal pins** (and the wires) faces **up**. The
+  silver WiFi module faces **down**.
+- The **USB socket** end goes to the **back wall**, where the opening is, and the antenna (the
+  short black tongue at the other end) points to the front.
 - Press it flat into the low **pocket** on the floor: it is a snug fit that holds it. If your
   board is loose, add two dots of hot glue between its edge and the pocket walls, away from the
   two small buttons next to the USB socket.
 
-**2. Put the wheel on the platform.** Set the wheel's foot in its seat on the platform (the flat
-plate). The bottom of the foot is flat: a drop of glue keeps it in place.
+**2. Put the screen in the wheel.** Push the screen into the wheel from the **back**, glass first,
+with the tab and its row of pins at the **bottom**. The wire sockets point straight backwards, out
+of the back of the foot: that is normal, a small cover hides them at the end.
 
-**3. Put the screen in the wheel.** Push the screen into the wheel from the **back**, glass first,
-with the tab and its row of pins at the **bottom**. Plug the 7 jumper wires onto the screen's pins
-(use the same wires you tested with). The sockets point straight backwards, out of the back of
-the foot: that is normal, a small cover hides them at the end.
-
-**4. Close the wheel.** Push the round **cap** into the back of the wheel, above the sockets, until
+**3. Close the wheel.** Push the round **cap** into the back of the wheel, above the sockets, until
 its rim touches the wheel: five small ribs hold it by friction (if it is too tight, sand them a
 little). If the screen rattles, a small piece of foam tape between the screen and the cap fixes it.
 
-**5. Connect.** Plug the other end of the 7 wires onto the ESP32 pins (table above). Hold the
-platform above the tray and slide the wires into the **slot** behind the wheel, from the back
-edge of the platform: nothing to unplug. Then push the platform down into the tray until it rests
-on the ledge all around: six small ribs on its edge hold it by friction. The wires curl
-underneath, there is room for them. If it is too tight, sand the ribs a little.
+**4. Put the wheel on the platform.** Set the wheel's foot in its seat on the platform (the flat
+plate), the wires on the side of the **slot** that runs to the back edge. The bottom of the foot is
+flat: a drop of glue keeps it in place.
+
+**5. Put the platform in the tray.** Slide the wires into the slot from the back edge of the
+platform, then push the platform down into the tray until it rests on the ledge all around: six
+small ribs on its edge hold it by friction. The wires curl underneath, there is room for them. If
+it is too tight, sand the ribs a little.
 
 **6. Check again.** Plug the USB cable: the hamster must run. (If not, a wire came loose during
 assembly.) To open the toy later, lift the platform by the wheel: the wires slide out of the slot.
